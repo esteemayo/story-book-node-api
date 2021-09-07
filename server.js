@@ -20,15 +20,15 @@ const db = process.env.DATABASE.replace(
 );
 
 // mongoDB connection
-// mongoose.connect(db, {
-mongoose.connect(dbLocal, {
+mongoose.connect(db, {
+// mongoose.connect(dbLocal, {
 	useNewUrlParser: true,
 	useCreateIndex: true,
 	useUnifiedTopology: true,
 	useFindAndModify: false,
 })
-	// .then(() => console.log(`Connected to MongoDB → ${db}`));
-	.then(() => console.log(`Connected to MongoDB → ${dbLocal}`));
+	.then(() => console.log(`Connected to MongoDB → ${db}`));
+	// .then(() => console.log(`Connected to MongoDB → ${dbLocal}`));
 
 app.set('port', process.env.PORT || 9090);
 
