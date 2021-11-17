@@ -1,5 +1,7 @@
 const mongoSanitize = require('express-mongo-sanitize');
+const { StatusCodes } = require('http-status-codes');
 const rateLimit = require('express-rate-limit');
+const swaggerUi = require('swagger-ui-express');
 const cookieParser = require('cookie-parser');
 const compression = require('compression');
 const express = require('express');
@@ -7,9 +9,12 @@ const morgan = require('morgan');
 const multer = require('multer');
 const helmet = require('helmet');
 const xss = require('xss-clean');
+const YAML = require('yamljs');
 const cors = require('cors');
 const path = require('path');
 const hpp = require('hpp');
+
+const swaggerDocument = YAML.load('./swagger.yaml');
 
 // requiring routes
 const globalErrorHandler = require('./controllers/errorController');
@@ -101,6 +106,13 @@ app.post('/api/v1/uploads', upload.single('file'), (req, res, next) => {
         status: 'success',
         message: 'File has been uploaded!'
     });
+});
+
+// swagger
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+app.get('/', (req, res, next) => {
+    res.status(StatusCodes.OK).send('<h1>Story-Books API</h1><a href="/api-docs">Documentation</a>');
 });
 
 // api routes

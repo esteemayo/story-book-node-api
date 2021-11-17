@@ -1,0 +1,741 @@
+openapi: 3.0.0
+info:
+  title: Story-Books-API
+  contact:
+    name: Emmanuel Adebayo
+    email: eadebayo15@gmail.com
+  version: '1.0'
+servers:
+  - url: https://story-books-api.herokuapp.com/api/v1
+    variables: {}
+paths:
+  /users/signup:
+    post:
+      tags:
+        - Auth
+      summary: Sign Up
+      operationId: SignUp
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUpRequest'
+            example:
+              name: ''
+              email: ''
+              username: ''
+              password: ''
+              passwordConfirm: ''
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+  /users/login:
+    post:
+      tags:
+        - Auth
+      summary: Login
+      operationId: Login
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+            example:
+              email: ''
+              password: ''
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+  /users/forgot-password:
+    post:
+      tags:
+        - Auth
+      summary: Forgot Password
+      operationId: ForgotPassword
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ForgotPasswordRequest'
+            example:
+              email: ''
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+  /users/reset-password/{token}:
+    parameters:
+      - in: path
+        name: token
+        schema:
+          type: string
+        required: true
+        description: The Password Reset Token
+    post:
+      tags:
+        - Auth
+      summary: Reset Password
+      operationId: ResetPassword
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResetPasswordRequest'
+            example:
+              password: ''
+              passwordConfirm: ''
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+  /users/update-my-password:
+    patch:
+      tags:
+        - Auth
+      summary: Update Current User Password
+      operationId: UpdateCurrentUserPassword
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCurrentUserPasswordRequest'
+            example:
+              passwordCurrent: ''
+              password: ''
+              passwordConfirm: ''
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /users:
+    get:
+      tags:
+        - User
+      summary: Get Users
+      operationId: GetUsers
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    post:
+      tags:
+        - User
+      summary: Create New User
+      operationId: CreateNewUser
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /users/{id}:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description: The User ID
+    get:
+      tags:
+        - User
+      summary: Get Single User
+      operationId: GetSingleUser
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    patch:
+      tags:
+        - User
+      summary: Update User
+      operationId: UpdateUser
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+            example:
+              name: ''
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    delete:
+      tags:
+        - User
+      summary: Delete User
+      operationId: DeleteUser
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /users/me:
+    get:
+      tags:
+        - User
+      summary: Get Current User
+      operationId: GetCurrentUser
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /users/my-stories:
+    get:
+      tags:
+        - User
+      summary: Get Current User Stories
+      operationId: GetCurrentUserStories
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /users/dashboard:
+    get:
+      tags:
+        - User
+      summary: Get User Dashboard
+      operationId: GetUserDashboard
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /users/update-me:
+    patch:
+      tags:
+        - User
+      summary: Update Current User Data
+      operationId: UpdateCurrentUserData
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCurrentUserDataRequest'
+            example:
+              name: ''
+              email: ''
+              username: ''
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /users/delete-me:
+    delete:
+      tags:
+        - User
+      summary: Delete Current User
+      operationId: DeleteCurrentUser
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /stories:
+    get:
+      tags:
+        - Story
+      summary: Get Stories
+      operationId: GetStories
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+    post:
+      tags:
+        - Story
+      summary: Create New Story
+      operationId: CreateNewStory
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateNewStoryRequest'
+            example:
+              title: ''
+              body: ''
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /stories/details/{slug}:
+    parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+        description: The Story SLUG
+    get:
+      tags:
+        - Story
+      summary: Get Single Story By Slug
+      operationId: GetSingleStoryBySlug
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+  /stories/user/{id}:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description: The Story User ID
+    get:
+      tags:
+        - Story
+      summary: Get  User's Story
+      operationId: GetUser'sStory
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+
+  /stories/{id}:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description: The Story ID
+    get:
+      tags:
+        - Story
+      summary: Get Single Story By Id
+      operationId: GetSingleStoryById
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+
+    patch:
+      tags:
+        - Story
+      summary: Update Story
+      operationId: UpdateStory
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateStoryRequest'
+            example:
+              title: ''
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    delete:
+      tags:
+        - Story
+      summary: Delete Story
+      operationId: DeleteStory
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /comments:
+    get:
+      tags:
+        - Comment
+      summary: Get Comments
+      operationId: GetComments
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    post:
+      tags:
+        - Comment
+      summary: Create New Comment
+      operationId: CreateNewComment
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateNewCommentRequest'
+            example:
+              body: ''
+              story: ''
+              user: ''
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /comments/{id}:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description: The Comment ID
+    get:
+      tags:
+        - Comment
+      summary: Get Single Comment
+      operationId: GetSingleComment
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    patch:
+      tags:
+        - Comment
+      summary: Update Comment
+      operationId: UpdateComment
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCommentRequest'
+            example:
+              body: ''
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    delete:
+      tags:
+        - Comment
+      summary: Delete Comment
+      operationId: DeleteComment
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /stories/{storyId}/comments:
+    parameters:
+      - in: path
+        name: storyId
+        schema:
+          type: string
+        required: true
+        description: The Story ID
+    get:
+      tags:
+        - Story | Comment
+      summary: Get All Comments On A Story
+      operationId: GetAllCommentsOnAStory
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+    post:
+      tags:
+        - Story | Comment
+      summary: Create New Comment On A Story
+      operationId: CreateNewCommentOnAStory
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateNewCommentOnAStoryRequest'
+            example:
+              body: ''
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /uploads:
+    post:
+      tags:
+        - File Uploads
+      summary: Upload Photo
+      operationId: UploadPhoto
+      parameters: []
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            encoding: {}
+            schema:
+              required:
+                - file
+              type: object
+              properties:
+                file:
+                  type: string
+        required: false
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+components:
+  schemas:
+    SignUpRequest:
+      title: SignUpRequest
+      required:
+        - name
+        - email
+        - username
+        - password
+        - passwordConfirm
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+        passwordConfirm:
+          type: string
+      example:
+        name: ''
+        email: ''
+        username: ''
+        password: ''
+        passwordConfirm: ''
+    LoginRequest:
+      title: LoginRequest
+      required:
+        - email
+        - password
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      example:
+        email: ''
+        password: ''
+    ForgotPasswordRequest:
+      title: ForgotPasswordRequest
+      required:
+        - email
+      type: object
+      properties:
+        email:
+          type: string
+      example:
+        email: ''
+    ResetPasswordRequest:
+      title: ResetPasswordRequest
+      required:
+        - password
+        - passwordConfirm
+      type: object
+      properties:
+        password:
+          type: string
+        passwordConfirm:
+          type: string
+      example:
+        password: ''
+        passwordConfirm: ''
+    UpdateCurrentUserPasswordRequest:
+      title: UpdateCurrentUserPasswordRequest
+      required:
+        - passwordCurrent
+        - password
+        - passwordConfirm
+      type: object
+      properties:
+        passwordCurrent:
+          type: string
+        password:
+          type: string
+        passwordConfirm:
+          type: string
+      example:
+        passwordCurrent: ''
+        password: ''
+        passwordConfirm: ''
+    UpdateUserRequest:
+      title: UpdateUserRequest
+      required:
+        - name
+      type: object
+      properties:
+        name:
+          type: string
+      example:
+        name: ''
+    UpdateCurrentUserDataRequest:
+      title: UpdateCurrentUserDataRequest
+      required:
+        - name
+        - email
+        - username
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        username:
+          type: string
+      example:
+        name: ''
+        email: ''
+        username: ''
+    CreateNewStoryRequest:
+      title: CreateNewStoryRequest
+      required:
+        - title
+        - body
+      type: object
+      properties:
+        title:
+          type: string
+        body:
+          type: string
+      example:
+        title: ''
+        body: ''
+    UpdateStoryRequest:
+      title: UpdateStoryRequest
+      required:
+        - title
+      type: object
+      properties:
+        title:
+          type: string
+      example:
+        title: ''
+    CreateNewCommentRequest:
+      title: CreateNewCommentRequest
+      required:
+        - body
+        - story
+        - user
+      type: object
+      properties:
+        body:
+          type: string
+        story:
+          type: string
+        user:
+          type: string
+      example:
+        body: ''
+        story: ''
+        user: ''
+    UpdateCommentRequest:
+      title: UpdateCommentRequest
+      required:
+        - body
+      type: object
+      properties:
+        body:
+          type: string
+      example:
+        body: ''
+    CreateNewCommentOnAStoryRequest:
+      title: CreateNewCommentOnAStoryRequest
+      required:
+        - body
+      type: object
+      properties:
+        body:
+          type: string
+      example:
+        body: ''
+  securitySchemes:
+    httpBearer:
+      type: http
+      scheme: bearer
+security:
+  - httpBearer: []
+tags:
+  - name: Auth
+  - name: User
+  - name: Story
+  - name: Comment
+  - name: Story | Comment
+  - name: File Uploads
