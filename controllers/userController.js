@@ -7,7 +7,7 @@ const factory = require('./handlerFactory');
 const catchAsync = require('../utils/catchAsync');
 const BadRequestError = require('../errors/badRequest');
 
-const createSendToken = (user, statusCode, res) => {
+const createSendToken = (user, statusCode, req, res) => {
     const token = user.generateAuthToken();
 
     res.cookie('jwt', token, {
@@ -67,7 +67,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
         runValidators: true
     });
 
-    createSendToken(user, StatusCodes.OK, res);
+    createSendToken(user, StatusCodes.OK, req, res);
 });
 
 exports.deleteMe = catchAsync(async (req, res, next) => {

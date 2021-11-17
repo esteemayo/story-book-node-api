@@ -37,7 +37,7 @@ exports.signup = catchAsync(async (req, res, next) => {
 
     const user = await User.create({ ...userData });
 
-    createSendToken(user, StatusCodes.CREATED, res);
+    createSendToken(user, StatusCodes.CREATED, req, res);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -52,7 +52,7 @@ exports.login = catchAsync(async (req, res, next) => {
         return next(new UnauthenticatedError('Incorrect email or password'));
     }
 
-    createSendToken(user, StatusCodes.OK, res);
+    createSendToken(user, StatusCodes.OK, req, res);
 });
 
 exports.protect = catchAsync(async (req, res, next) => {
@@ -191,7 +191,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     user.passwordResetExpires = undefined;
     await user.save();
 
-    createSendToken(user, StatusCodes.OK, res);
+    createSendToken(user, StatusCodes.OK, req, res);
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
@@ -205,5 +205,5 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
     user.passwordConfirm = req.body.passwordConfirm;
     await user.save();
 
-    createSendToken(user, StatusCodes.OK, res);
+    createSendToken(user, StatusCodes.OK, req, res);
 });
