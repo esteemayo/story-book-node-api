@@ -55,14 +55,12 @@ storySchema.pre('save', async function (next) {
 
     this.slug = slugify(this.title, { lower: true });
 
-    const slugRegExp = new RegExp(`(${this.slug})((-[0-9]*$)?)$`, 'i');
+    const slugRegExp = new RegExp(`^(${this.slug})((-[0-9]*$)?)$`, 'i');
     const storyWithSlug = await this.constructor.find({ slug: slugRegExp });
 
     if (storyWithSlug.length) {
         this.slug = `${this.slug}-${storyWithSlug.length + 1}`;
     }
-
-    next();
 });
 
 storySchema.pre(/^find/, function (next) {

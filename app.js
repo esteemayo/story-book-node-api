@@ -13,9 +13,10 @@ const hpp = require('hpp');
 
 // requiring routes
 const globalErrorHandler = require('./controllers/errorController');
+const BadRequestError = require('./errors/badRequest');
+const NotFoundError = require('./errors/notFound');
 const commentRoute = require('./routes/comments');
 const storyRoute = require('./routes/stories');
-const AppError = require('./utils/appError');
 const userRoute = require('./routes/users');
 
 // start express app
@@ -59,9 +60,7 @@ app.use(mongoSanitize());
 app.use(xss());
 
 // prevent parameter pollution
-app.use(hpp({
-    whitelist: ['title', 'body']
-}));
+app.use(hpp());
 
 // compression middleware
 app.use(compression());
@@ -75,6 +74,7 @@ app.use((req, res, next) => {
     next();
 });
 
+// file upload
 const multerStorage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'images');
@@ -88,7 +88,7 @@ const multerFilter = (req, file, cb) => {
     if (file.mimetype.startsWith('image')) {
         return cb(null, true);
     }
-    return cb(new AppError('Not an image! Please upload only images', 400), false);
+    return cb(new BadRequestError('Not an image! Please upload only images'), false);
 };
 
 const upload = multer({
@@ -103,13 +103,13 @@ app.post('/api/v1/uploads', upload.single('file'), (req, res, next) => {
     });
 });
 
-// routes
+// api routes
 app.use('/api/v1/comments', commentRoute);
 app.use('/api/v1/stories', storyRoute);
 app.use('/api/v1/users', userRoute);
 
 app.all('*', (req, res, next) => {
-    next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
+    next(new NotFoundError(`Can't find ${req.originalUrl} on this server`));
 });
 
 app.use(globalErrorHandler);

@@ -1,71 +1,64 @@
-const AppError = require('../utils/appError');
+const { StatusCodes } = require('http-status-codes');
 
-const handleCastErrorDB = (err) => {
-    const message = `Invalid ${err.path}: ${err.value}`;
-    return new AppError(message, 400);
+const handleCastErrorDB = (customError, err) => {
+    customError.message = `Invalid ${err.path}: ${err.value}`;
+    customError.statusCode = StatusCodes.BAD_REQUEST;
 };
 
-const handleDuplicateFieldsDB = (err) => {
+const handleDuplicateFieldsDB = (customError, err) => {
     const value = err.message.match(/(["'])(\\?.)/)[0];
-    const message = `Duplicate field value: ${value}. Please use another value.`;
-    return new AppError(message, 400);
+    customError.message = `Duplicate field value: ${value}. Please use another value.`;
+    customError.statusCode = StatusCodes.BAD_REQUEST;
 };
 
-const handleValidationErrorDB = (err) => {
+const handleValidationErrorDB = (customError, err) => {
     const errors = Object.values(err.errors).map((item) => item.message);
-    const message = `Invalid input data. ${errors.join('. ')}`;
-    return new AppError(message, 400);
+    customError.message = `Invalid input data. ${errors.join('. ')}`;
+    customError.statusCode = StatusCodes.BAD_REQUEST;
 };
 
-const handleJWTError = () =>
-    new AppError('Invalid token. Please log in again!', 400);
+const handleJWTError = (customError) => {
+    customError.message = 'Invalid token. Please log in again!';
+    customError.statusCode = StatusCodes.UNAUTHORIZED;
+};
 
-const handleJWTExpiredError = () =>
-    new AppError('Your token has expired! Please log in again!', 400);
+const handleJWTExpiredError = (customError) => {
+    customError.message = 'Your token has expired! Please log in again!';
+    customError.statusCode = StatusCodes.UNAUTHORIZED;
+};
 
 const sendErrorDev = (err, res) => {
-    res.status(err.statusCode).json({
+    return res.status(err.statusCode).json({
         status: err.status,
-        error: err,
         message: err.message,
         stack: err.statck
     });
 };
 
 const sendErrorProd = (err, res) => {
-    // operational, trusted error: send message to client
-    if (err.isOperational) {
-        return res.status(err.statusCode).json({
-            status: err.status,
-            message: err.message
-        });
-    }
-    // programming or other unknown error: don't leak error details
-    // log error
-    console.error('ERROR 🔥', err);
-    // send generic message
-    return res.status(500).json({
-        status: 'error',
-        message: 'Something went very wrong'
+    return res.status(err.statusCode).json({
+        status: err.status,
+        message: err.message
     });
 };
 
 module.exports = (err, req, res, next) => {
-    err.statusCode = err.statusCode || 500;
-    err.status = err.status || 'error';
+    const customError = {
+        statusCode: err.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
+        message: err.message || 'Something went wrong, please try again later',
+        status: err.status,
+        stack: err.stack
+    };
+
+    if (err.name === 'CastError') handleCastErrorDB(customError, err);
+    if (err.code && err.code === 11000) handleDuplicateFieldsDB(customError, err);
+    if (err.name === 'ValidationError') handleValidationErrorDB(customError, err);
+    if (err.name === 'JsonWebTokenError') handleJWTError(customError);
+    if (err.name === 'TokenExpiredError') handleJWTExpiredError(customError);
 
     if (process.env.NODE_ENV === 'development') {
-        sendErrorDev(err, res);
+        sendErrorDev(customError, res);
     } else if (process.env.NODE_ENV === 'production') {
-        let error = { ...err };
-
-        if (error.name === 'CastError') error = handleCastErrorDB(error);
-        if (error.code === 11000) error = handleDuplicateFieldsDB(error);
-        if (error.name === 'ValidationError')
-            error = handleValidationErrorDB(error);
-        if (error.name === 'JsonWebTokenError') error = handleJWTError();
-        if (error.name === 'TokenExpiredError') error = handleJWTExpiredError();
-
-        sendErrorProd(error, res);
+        sendErrorProd(customError, res);
     }
 };

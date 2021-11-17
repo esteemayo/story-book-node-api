@@ -20,7 +20,7 @@ router
     .route('/:id')
     .get(
         authController.isLoggedIn,
-        storyController.getStory
+        storyController.getStoryById
     )
     .patch(
         authController.protect,
@@ -35,7 +35,7 @@ router
 router.get(
     '/details/:slug',
     authController.isLoggedIn,
-    storyController.getWithSlug
+    storyController.getStoryBySlug
 );
 
 router.get(

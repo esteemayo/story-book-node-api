@@ -1,8 +1,10 @@
-const AppError = require('../utils/appError');
+const { StatusCodes } = require('http-status-codes');
+
 const catchAsync = require('../utils/catchAsync');
 const APIFeatures = require('../utils/apiFeatures');
+const NotFoundError = require('../errors/notFound');
 
-exports.getAll = Model => catchAsync(async (req, res, next) => {
+exports.getAll = (Model) => catchAsync(async (req, res, next) => {
     let filter = {};
     if (req.params.storyId) filter = { story: req.params.storyId };
 
@@ -15,54 +17,68 @@ exports.getAll = Model => catchAsync(async (req, res, next) => {
     const docs = await features.query;
     // const docs = await features.query.explain();
 
-    res.status(200).send(docs);
+    res.status(StatusCodes.OK).send(docs);
 });
 
-exports.getOne = Model => catchAsync(async (req, res, next) => {
-    const doc = await Model.findById(req.params.id);
+exports.getOne = (Model, popOptions) => catchAsync(async (req, res, next) => {
+    const { id: docID } = req.params;
+
+    let query = Model.findById(docID);
+    if (popOptions) query = query.populate(popOptions);
+
+    const doc = await query;
 
     if (!doc) {
-        return next(new AppError('No document found with that ID', 404));
+        return next(new NotFoundError(`No document found with that ID: ${docID}`));
     }
 
-    res.status(200).send(doc);
+    res.status(StatusCodes.OK).send(doc);
 });
 
-exports.getSlug = Model => catchAsync(async (req, res, next) => {
-    const doc = await Model.findOne({ 'slug': req.params.slug });
+exports.getSlug = (Model, popOptions) => catchAsync(async (req, res, next) => {
+    const { slug } = req.params;
+
+    let query = Model.findOne({ 'slug': slug });
+    if (popOptions) query = query.populate(popOptions);
+
+    const doc = await query;
 
     if (!doc) {
-        return next(new AppError('No document found with that SLUG', 404));
+        return next(new NotFoundError(`No document found with that SLUG: ${slug}`));
     }
 
-    res.status(200).send(doc);
+    res.status(StatusCodes.OK).send(doc);
 });
 
-exports.createOne = Model => catchAsync(async (req, res, next) => {
-    const doc = await Model.create(req.body);
+exports.createOne = (Model) => catchAsync(async (req, res, next) => {
+    const doc = await Model.create({ ...req.body });
 
-    res.status(201).send(doc);
+    res.status(StatusCodes.CREATED).send(doc);
 });
 
-exports.updateOne = Model => catchAsync(async (req, res, next) => {
-    const doc = await Model.findByIdAndUpdate(req.params.id, req.body, {
+exports.updateOne = (Model) => catchAsync(async (req, res, next) => {
+    const { id: docID } = req.params;
+
+    const doc = await Model.findByIdAndUpdate(docID, req.body, {
         new: true,
         runValidators: true
     });
 
     if (!doc) {
-        return next(new AppError('No document found with that ID', 404));
+        return next(new NotFoundError(`No document found with that ID: ${docID}`));
     }
 
-    res.status(200).send(doc);
+    res.status(StatusCodes.OK).send(doc);
 });
 
-exports.deleteOne = Model => catchAsync(async (req, res, next) => {
-    const doc = await Model.findByIdAndDelete(req.params.id);
+exports.deleteOne = (Model) => catchAsync(async (req, res, next) => {
+    const { id: docID } = req.params;
+
+    const doc = await Model.findByIdAndDelete(docID);
 
     if (!doc) {
-        return next(new AppError('No document found with that ID', 404));
+        return next(new NotFoundError(`No document found with that ID: ${docID}`));
     }
 
-    res.status(204).send(doc);
+    res.status(StatusCodes.NO_CONTENT).send(doc);
 });

@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const fs = require('fs');
+require('colors');
 
 // models
 const Comment = require('../../models/Comment');
@@ -10,24 +11,18 @@ const User = require('../../models/User');
 dotenv.config({ path: './config.env' });
 
 // db local
-const dbLocal = process.env.DATABASE_LOCAL;
+const db = process.env.DATABASE_LOCAL;
 
-// db atlas
-const db = process.env.DATABASE.replace(
+// atlas mongo uri
+const mongoUri = process.env.DATABASE.replace(
     '<PASSWORD>',
     process.env.DATABASE_PASSWORD
 );
 
 // mongoDB connection
-mongoose.connect(db, {
-// mongoose.connect(dbLocal, {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false
-})
-    .then(() => console.log(`Connected to MongoDB → ${db}`));
-    // .then(() => console.log(`Connected to MongoDB → ${dbLocal}`));
+mongoose.connect(mongoUri)
+    .then(() => console.log(`Connected to MongoDB → ${mongoUri}`.gray.bold))
+    .catch((err) => console.log(`Could not connect to MongoDB → ${err}`.red.bold));
 
 // read JSON file
 const comments = JSON.parse(fs.readFileSync(`${__dirname}/comments.json`, 'utf-8'));
@@ -40,10 +35,12 @@ const importData = async () => {
         await User.create(users, { validateBeforeSave: false });
         await Comment.create(comments);
         await Story.create(stories);
-
-        console.log('👍👍👍👍👍👍 Data successfully loaded! 👍👍👍👍👍👍');
+        console.log('👍👍👍👍👍👍 Data successfully loaded! 👍👍👍👍👍👍'.green.bold);
         process.exit();
     } catch (err) {
+        console.log(
+            '\n👎👎👎👎👎👎👎👎 Error! The Error info is below but if you are importing sample data make sure to drop the existing database first with.\n\n\t npm run blowitallaway\n\n\n'.red.bold
+        );
         console.error(err);
         process.exit();
     }
@@ -52,20 +49,15 @@ const importData = async () => {
 // delete all data from DB
 const deleteData = async () => {
     try {
-        console.log('😢😢 Goodbye Data...');
-
+        console.log('😢😢 Goodbye Data...'.blue.bold);
         await Comment.deleteMany();
         await Story.deleteMany();
         await User.deleteMany();
-
         console.log(
-            'Data successfully deleted! To load sample data, run\n\n\t npm run sample\n\n'
+            'Data successfully deleted! To load sample data, run\n\n\t npm run sample\n\n'.green.bold
         );
         process.exit();
     } catch (err) {
-        console.log(
-            '\n👎👎👎👎👎👎👎👎 Error! The Error info is below but if you are importing sample data make sure to drop the existing database first with.\n\n\t npm run blowitallaway\n\n\n'
-        );
         console.error(err);
         process.exit();
     }

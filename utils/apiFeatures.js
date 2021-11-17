@@ -8,11 +8,11 @@ class APIFeatures {
         // filtering
         const queryStr = { ...this.queryString };
         const excludedFields = ['page', 'sort', 'limit', 'fields'];
-        excludedFields.forEach(item => delete queryStr[item]);
+        excludedFields.forEach((item) => delete queryStr[item]);
 
         // advanced filtering
         let queryObj = JSON.stringify(queryStr);
-        queryObj = queryObj.replace(/\b(gte|gt|lte|lt)\b/, match => `$${match}`);
+        queryObj = queryObj.replace(/\b(gte|gt|lte|lt)\b/, (match) => `$${match}`);
 
         this.query = this.query.find(JSON.parse(queryObj));
         return this;
@@ -26,7 +26,6 @@ class APIFeatures {
         } else {
             this.query = this.query.sort('-createdAt');
         }
-
         return this;
     }
 
@@ -38,20 +37,16 @@ class APIFeatures {
         } else {
             this.query = this.query.select('-__v');
         }
-
         return this;
     }
 
     paginate() {
         // pagination
-        const page = this.queryString.page * 1 || 1;
-        const limit = this.queryString.limit * 1 || 100;
+        const page = Number(this.queryString.page) || 1;
+        const limit = Number(this.queryString.limit) || 100;
         const skip = (page - 1) * limit;
 
-        if (this.queryString.page) {
-            this.query = this.query.skip(skip).limit(limit);
-        }
-
+        this.query = this.query.skip(skip).limit(limit);
         return this;
     }
 }

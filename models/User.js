@@ -1,4 +1,3 @@
-const validator = require('validator');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
@@ -16,7 +15,10 @@ const userSchema = new mongoose.Schema(
 			unique: true,
 			lowercase: true,
 			required: [true, 'Please provide your email'],
-			validate: [validator.isEmail, 'Please provide a valid email'],
+			match: [
+				/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\0-9]+\.)+[a-zA-Z]{2,}))$/,
+				'Please provide a valid email'
+			],
 		},
 		username: {
 			type: String,
@@ -83,8 +85,6 @@ userSchema.pre('save', async function (next) {
 
 	this.password = await bcrypt.hash(this.password, 12);
 	this.passwordConfirm = undefined;
-
-	next();
 });
 
 userSchema.pre('save', function (next) {
@@ -99,8 +99,8 @@ userSchema.pre(/^find/, function (next) {
 	next();
 });
 
-userSchema.methods.correctPassword = async function (candidatePassword, userPassword) {
-	return await bcrypt.compare(candidatePassword, userPassword);
+userSchema.methods.correctPassword = async function (candidatePassword) {
+	return await bcrypt.compare(candidatePassword, this.password);
 };
 
 userSchema.methods.generateAuthToken = function () {
@@ -125,6 +125,7 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
 		const changedTimeStamp = parseInt(this.passwordChangedAt.getTime() / 1000, 10);
 		return JWTTimestamp < changedTimeStamp;
 	}
+	// return false if password's not changed
 	return false;
 };
 

@@ -1,10 +1,11 @@
 const _ = require('lodash');
+const { StatusCodes } = require('http-status-codes');
 
 const User = require('../models/User');
 const Story = require('../models/Story');
 const factory = require('./handlerFactory');
-const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
+const BadRequestError = require('../errors/badRequest');
 
 const createSendToken = (user, statusCode, res) => {
     const token = user.generateAuthToken();
@@ -28,46 +29,56 @@ const createSendToken = (user, statusCode, res) => {
 };
 
 exports.getUserDashBoard = catchAsync(async (req, res, next) => {
-    const stories = await Story.find({ user: req.user.id });
+    const { id: userID } = req.user;
 
-    res.status(200).send(stories);
+    const stories = await Story.find({ user: userID });
+
+    res.status(StatusCodes.OK).send(stories);
 });
 
 exports.getCurrentUserStories = catchAsync(async (req, res, next) => {
-    const stories = await Story.find({ user: req.user.id });
+    const { id: userID } = req.user;
 
-    res.status(200).send(stories);
+    const stories = await Story.find({ user: userID });
+
+    res.status(StatusCodes.OK).send(stories);
 });
 
 exports.updateMe = catchAsync(async (req, res, next) => {
-    const { password, passwordConfirm } = req.body;
+    const {
+        user: { id: userID },
+        body: {
+            password,
+            passwordConfirm,
+        },
+    } = req;
 
     if (password || passwordConfirm) {
         return next(
-            new AppError(
-                `This route is not for password updates. Please use update ${
-                    req.protocol
-                }://${req.get('host')}/api/v1/users/update-my-password`,
-                400
+            new BadRequestError(
+                `This route is not for password updates. Please use update ${req.protocol
+                }://${req.get('host')}/api/v1/users/update-my-password`
             )
         );
     }
 
     const filterBody = _.pick(req.body, ['name', 'email', 'photo', 'username']);
 
-    const user = await User.findByIdAndUpdate(req.user.id, filterBody, {
+    const user = await User.findByIdAndUpdate(userID, filterBody, {
         new: true,
         runValidators: true
     });
 
-    createSendToken(user, 200, res);
+    createSendToken(user, StatusCodes.OK, res);
 });
 
 exports.deleteMe = catchAsync(async (req, res, next) => {
-    const user = await User.findByIdAndUpdate(req.user.id, { active: false });
+    const { id: userID } = req.user;
+
+    const user = await User.findByIdAndUpdate(userID, { active: false });
     await Story.deleteMany({ author: user.username });
 
-    res.status(204).json({
+    res.status(StatusCodes.NO_CONTENT).json({
         status: 'success',
         data: null
     });
@@ -79,7 +90,7 @@ exports.getMe = (req, res, next) => {
 };
 
 exports.createUser = (req, res, next) => {
-    res.status(500).json({
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
         status: 'fail',
         message: `This route is not defined! Please use ${req.protocol}://${req.get(
             'host'
@@ -89,5 +100,6 @@ exports.createUser = (req, res, next) => {
 
 exports.getAllUsers = factory.getAll(User);
 exports.getUser = factory.getOne(User);
+// do NOT update password with this
 exports.updateUser = factory.updateOne(User);
 exports.deleteUser = factory.deleteOne(User);
