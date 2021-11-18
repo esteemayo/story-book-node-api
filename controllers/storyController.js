@@ -22,7 +22,9 @@ exports.getAllStories = catchAsync(async (req, res, next) => {
 exports.getStoryById = catchAsync(async (req, res, next) => {
     const { id: storyID } = req.params;
 
-    const story = await Story.findById(storyID).populate('comments');
+    const story = await Story
+        .findById(storyID)
+        .populate('comments');
 
     if (!story) {
         return next(new NotFoundError(`No story found with that ID: ${storyID}`));
@@ -48,7 +50,9 @@ exports.getStoryById = catchAsync(async (req, res, next) => {
 exports.getStoryBySlug = catchAsync(async (req, res, next) => {
     const { slug } = req.params;
 
-    const story = await Story.findOne({ 'slug': slug }).populate('comments');
+    const story = await Story
+        .findOne({ 'slug': slug })
+        .populate('comments');
 
     if (!story) {
         return next(new NotFoundError(`No story found with that SLUG: ${slug}`));
@@ -106,7 +110,7 @@ exports.updateStory = catchAsync(async (req, res, next) => {
         res.status(StatusCodes.OK).send(updatedStory);
     }
 
-    return next(new UnauthenticatedError('You can only update your story'));
+    return next(new ForbiddenError('You can only update your story'));
 });
 
 exports.deleteStory = catchAsync(async (req, res, next) => {
@@ -126,5 +130,5 @@ exports.deleteStory = catchAsync(async (req, res, next) => {
         });
     }
 
-    return next(new UnauthenticatedError('You can only delete your story'));
+    return next(new ForbiddenError('You can only delete your story'));
 });
