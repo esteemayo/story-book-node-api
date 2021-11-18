@@ -6,10 +6,10 @@ info:
     email: eadebayo15@gmail.com
   version: '1.0'
 servers:
-  - url: https://story-books-api.herokuapp.com/api/v1
+  - url: https://story-books-api.herokuapp.com
     variables: {}
 paths:
-  /users/signup:
+  /api/v1/users/signup:
     post:
       tags:
         - Auth
@@ -35,7 +35,7 @@ paths:
           headers: {}
       deprecated: false
       security: []
-  /users/login:
+  /api/v1/users/login:
     post:
       tags:
         - Auth
@@ -58,7 +58,7 @@ paths:
           headers: {}
       deprecated: false
       security: []
-  /users/forgot-password:
+  /api/v1/users/forgot-password:
     post:
       tags:
         - Auth
@@ -80,7 +80,7 @@ paths:
           headers: {}
       deprecated: false
       security: []
-  /users/reset-password/{token}:
+  /api/v1/users/reset-password/{token}:
     parameters:
       - in: path
         name: token
@@ -110,7 +110,7 @@ paths:
           headers: {}
       deprecated: false
       security: []
-  /users/update-my-password:
+  /api/v1/users/update-my-password:
     patch:
       tags:
         - Auth
@@ -133,7 +133,7 @@ paths:
           description: ''
           headers: {}
       deprecated: false
-  /users:
+  /api/v1/users:
     get:
       tags:
         - User
@@ -156,7 +156,7 @@ paths:
           description: ''
           headers: {}
       deprecated: false
-  /users/{id}:
+  /api/v1/users/{id}:
     parameters:
       - in: path
         name: id
@@ -206,7 +206,7 @@ paths:
           description: ''
           headers: {}
       deprecated: false
-  /users/me:
+  /api/v1/users/me:
     get:
       tags:
         - User
@@ -218,7 +218,7 @@ paths:
           description: ''
           headers: {}
       deprecated: false
-  /users/my-stories:
+  /api/v1/users/my-stories:
     get:
       tags:
         - User
@@ -230,7 +230,7 @@ paths:
           description: ''
           headers: {}
       deprecated: false
-  /users/dashboard:
+  /api/v1/users/dashboard:
     get:
       tags:
         - User
@@ -242,7 +242,7 @@ paths:
           description: ''
           headers: {}
       deprecated: false
-  /users/update-me:
+  /api/v1/users/update-me:
     patch:
       tags:
         - User
@@ -265,7 +265,7 @@ paths:
           description: ''
           headers: {}
       deprecated: false
-  /users/delete-me:
+  /api/v1/users/delete-me:
     delete:
       tags:
         - User
@@ -277,7 +277,7 @@ paths:
           description: ''
           headers: {}
       deprecated: false
-  /stories:
+  /api/v1/stories:
     get:
       tags:
         - Story
@@ -311,7 +311,7 @@ paths:
           description: ''
           headers: {}
       deprecated: false
-  /stories/details/{slug}:
+  /api/v1/stories/details/{slug}:
     parameters:
       - in: path
         name: slug
@@ -331,7 +331,7 @@ paths:
           headers: {}
       deprecated: false
       security: []
-  /stories/user/{id}:
+  /api/v1/stories/user/{id}:
     parameters:
       - in: path
         name: id
@@ -351,7 +351,7 @@ paths:
           headers: {}
       deprecated: false
 
-  /stories/{id}:
+  /api/v1/stories/{id}:
     parameters:
       - in: path
         name: id
@@ -403,7 +403,7 @@ paths:
           description: ''
           headers: {}
       deprecated: false
-  /comments:
+  /api/v1/comments:
     get:
       tags:
         - Comment
@@ -437,7 +437,7 @@ paths:
           description: ''
           headers: {}
       deprecated: false
-  /comments/{id}:
+  /api/v1/comments/{id}:
     parameters:
       - in: path
         name: id
@@ -487,7 +487,7 @@ paths:
           description: ''
           headers: {}
       deprecated: false
-  /stories/{storyId}/comments:
+  /api/v1/stories/{storyId}/comments:
     parameters:
       - in: path
         name: storyId
