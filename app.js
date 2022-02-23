@@ -42,14 +42,14 @@ app.use(helmet());
 
 // development logging
 if (process.env.NODE_ENV === 'development') {
-    app.use(morgan('dev'));
+  app.use(morgan('dev'));
 }
 
 // limit request from same API
 const limiter = rateLimit({
-    max: 100,
-    windowMs: 60 * 60 * 1000,
-    message: 'Too many requests from this IP, Please try again in an hour'
+  max: 100,
+  windowMs: 60 * 60 * 1000,
+  message: 'Too many requests from this IP, Please try again in an hour',
 });
 
 app.use('/api', limiter);
@@ -72,47 +72,52 @@ app.use(compression());
 
 // test Middleware
 app.use((req, res, next) => {
-    req.requestTime = new Date().toISOString();
-    // console.log(req.headers);
-    // console.log(req.cookies);
+  req.requestTime = new Date().toISOString();
+  // console.log(req.headers);
+  // console.log(req.cookies);
 
-    next();
+  next();
 });
 
 // file upload
 const multerStorage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'images');
-    },
-    filename: (req, file, cb) => {
-        cb(null, req.body.name);
-    }
+  destination: (req, file, cb) => {
+    cb(null, 'images');
+  },
+  filename: (req, file, cb) => {
+    cb(null, req.body.name);
+  },
 });
 
 const multerFilter = (req, file, cb) => {
-    if (file.mimetype.startsWith('image')) {
-        return cb(null, true);
-    }
-    return cb(new BadRequestError('Not an image! Please upload only images'), false);
+  if (file.mimetype.startsWith('image')) {
+    return cb(null, true);
+  }
+  return cb(
+    new BadRequestError('Not an image! Please upload only images'),
+    false
+  );
 };
 
 const upload = multer({
-    storage: multerStorage,
-    fileFilter: multerFilter
+  storage: multerStorage,
+  fileFilter: multerFilter,
 });
 
 app.post('/api/v1/uploads', upload.single('file'), (req, res, next) => {
-    res.status(200).json({
-        status: 'success',
-        message: 'File has been uploaded!'
-    });
+  res.status(200).json({
+    status: 'success',
+    message: 'File has been uploaded!',
+  });
 });
 
 // swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.get('/', (req, res, next) => {
-    res.status(StatusCodes.OK).send('<h1>Story-Books API</h1><a href="/api-docs">Documentation</a>');
+  res
+    .status(StatusCodes.OK)
+    .send('<h1>Story-Books API</h1><a href="/api-docs">Documentation</a>');
 });
 
 // api routes
@@ -121,7 +126,7 @@ app.use('/api/v1/stories', storyRoute);
 app.use('/api/v1/users', userRoute);
 
 app.all('*', (req, res, next) => {
-    next(new NotFoundError(`Can't find ${req.originalUrl} on this server`));
+  next(new NotFoundError(`Can't find ${req.originalUrl} on this server`));
 });
 
 app.use(globalErrorHandler);

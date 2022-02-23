@@ -4,23 +4,25 @@ const catchAsync = require('../utils/catchAsync');
 const APIFeatures = require('../utils/apiFeatures');
 const NotFoundError = require('../errors/notFound');
 
-exports.getAll = (Model) => catchAsync(async (req, res, next) => {
+exports.getAll = (Model) =>
+  catchAsync(async (req, res, next) => {
     let filter = {};
     if (req.params.storyId) filter = { story: req.params.storyId };
 
     const features = new APIFeatures(Model.find(filter), req.query)
-        .filter()
-        .sort()
-        .limitFields()
-        .paginate();
+      .filter()
+      .sort()
+      .limitFields()
+      .paginate();
 
     const docs = await features.query;
     // const docs = await features.query.explain();
 
     res.status(StatusCodes.OK).send(docs);
-});
+  });
 
-exports.getOne = (Model, popOptions) => catchAsync(async (req, res, next) => {
+exports.getOne = (Model, popOptions) =>
+  catchAsync(async (req, res, next) => {
     const { id: docID } = req.params;
 
     let query = Model.findById(docID);
@@ -29,56 +31,68 @@ exports.getOne = (Model, popOptions) => catchAsync(async (req, res, next) => {
     const doc = await query;
 
     if (!doc) {
-        return next(new NotFoundError(`No document found with that ID: ${docID}`));
+      return next(
+        new NotFoundError(`No document found with that ID: ${docID}`)
+      );
     }
 
     res.status(StatusCodes.OK).send(doc);
-});
+  });
 
-exports.getSlug = (Model, popOptions) => catchAsync(async (req, res, next) => {
+exports.getSlug = (Model, popOptions) =>
+  catchAsync(async (req, res, next) => {
     const { slug } = req.params;
 
-    let query = Model.findOne({ 'slug': slug });
+    let query = Model.findOne({ slug: slug });
     if (popOptions) query = query.populate(popOptions);
 
     const doc = await query;
 
     if (!doc) {
-        return next(new NotFoundError(`No document found with that SLUG: ${slug}`));
+      return next(
+        new NotFoundError(`No document found with that SLUG: ${slug}`)
+      );
     }
 
     res.status(StatusCodes.OK).send(doc);
-});
+  });
 
-exports.createOne = (Model) => catchAsync(async (req, res, next) => {
+exports.createOne = (Model) =>
+  catchAsync(async (req, res, next) => {
     const doc = await Model.create({ ...req.body });
 
     res.status(StatusCodes.CREATED).send(doc);
-});
+  });
 
-exports.updateOne = (Model) => catchAsync(async (req, res, next) => {
+exports.updateOne = (Model) =>
+  catchAsync(async (req, res, next) => {
     const { id: docID } = req.params;
 
     const doc = await Model.findByIdAndUpdate(docID, req.body, {
-        new: true,
-        runValidators: true
+      new: true,
+      runValidators: true,
     });
 
     if (!doc) {
-        return next(new NotFoundError(`No document found with that ID: ${docID}`));
+      return next(
+        new NotFoundError(`No document found with that ID: ${docID}`)
+      );
     }
 
     res.status(StatusCodes.OK).send(doc);
-});
+  });
 
-exports.deleteOne = (Model) => catchAsync(async (req, res, next) => {
+exports.deleteOne = (Model) =>
+  catchAsync(async (req, res, next) => {
     const { id: docID } = req.params;
 
     const doc = await Model.findByIdAndDelete(docID);
 
     if (!doc) {
-        return next(new NotFoundError(`No document found with that ID: ${docID}`));
+      return next(
+        new NotFoundError(`No document found with that ID: ${docID}`)
+      );
     }
 
     res.status(StatusCodes.NO_CONTENT).send(doc);
-});
+  });
