@@ -20,10 +20,14 @@ const mongoUri = process.env.DATABASE.replace(
   process.env.DATABASE_PASSWORD
 );
 
+const devEnv = process.env.NODE_ENV !== 'production';
+
 // mongoDB connection
 mongoose
-  .connect(mongoUri)
-  .then(() => console.log(`Connected to MongoDB → ${mongoUri}`.gray.bold));
+  .connect(devEnv ? db : mongoUri)
+  .then(() =>
+    console.log(`Connected to MongoDB → ${devEnv ? db : mongoUri}`.gray.bold)
+  );
 
 app.set('port', process.env.PORT || 9090);
 
