@@ -125,6 +125,35 @@ exports.updateStory = catchAsync(async (req, res, next) => {
   return next(new ForbiddenError('You can only update your story'));
 });
 
+exports.likeStory = catchAsync(async (req, res, next) => {
+  const { id: storyId } = req.params;
+
+  let story = await Story.findById(storyId);
+
+  if (!story) {
+    return next(new NotFoundError(`No story found with that ID: ${storyId}`));
+  }
+
+  const index = story.likes.findIndex((id) => id === String(req.user.id));
+
+  if (index === -1) {
+    story.likes.push(req.user.id);
+  } else {
+    story.likes = story.likes.filter((id) => id !== String(req.user.id));
+  }
+
+  story = await Story.findByIdAndUpdate(
+    storyId,
+    { $set: { ...story } },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  res.status(StatusCodes.OK).send(story);
+});
+
 exports.deleteStory = catchAsync(async (req, res, next) => {
   const { id: storyId } = req.params;
 
