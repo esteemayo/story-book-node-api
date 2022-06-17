@@ -20,12 +20,12 @@ exports.getAllStories = catchAsync(async (req, res, next) => {
 });
 
 exports.getStoryById = catchAsync(async (req, res, next) => {
-  const { id: storyID } = req.params;
+  const { id: storyId } = req.params;
 
-  const story = await Story.findById(storyID).populate('comments');
+  const story = await Story.findById(storyId).populate('comments');
 
   if (!story) {
-    return next(new NotFoundError(`No story found with that ID: ${storyID}`));
+    return next(new NotFoundError(`No story found with that ID: ${storyId}`));
   }
 
   if (story.status === 'public') {
@@ -105,16 +105,16 @@ exports.createStory = catchAsync(async (req, res, next) => {
 });
 
 exports.updateStory = catchAsync(async (req, res, next) => {
-  const { id: storyID } = req.params;
+  const { id: storyId } = req.params;
 
-  const story = await Story.findById(storyID);
+  const story = await Story.findById(storyId);
 
   if (!story) {
-    return next(new NotFoundError(`No story found with that ID: ${storyID}`));
+    return next(new NotFoundError(`No story found with that ID: ${storyId}`));
   }
 
   if (story.author === req.user.username) {
-    const updatedStory = await Story.findByIdAndUpdate(storyID, req.body, {
+    const updatedStory = await Story.findByIdAndUpdate(storyId, req.body, {
       new: true,
       runValidators: true,
     });
@@ -126,16 +126,16 @@ exports.updateStory = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteStory = catchAsync(async (req, res, next) => {
-  const { id: storyID } = req.params;
+  const { id: storyId } = req.params;
 
-  const story = await Story.findById(storyID);
+  const story = await Story.findById(storyId);
 
   if (!story) {
-    return next(new NotFoundError(`No story found with that ID: ${storyID}`));
+    return next(new NotFoundError(`No story found with that ID: ${storyId}`));
   }
 
   if (story.author === req.user.username || req.user.role === 'admin') {
-    await Story.findByIdAndDelete(storyID);
+    await Story.findByIdAndDelete(storyId);
     res.status(StatusCodes.NO_CONTENT).json({
       status: 'success',
       data: null,
