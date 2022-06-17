@@ -1,28 +1,30 @@
-const mongoSanitize = require('express-mongo-sanitize');
-const { StatusCodes } = require('http-status-codes');
-const rateLimit = require('express-rate-limit');
-const swaggerUi = require('swagger-ui-express');
-const cookieParser = require('cookie-parser');
-const compression = require('compression');
 const express = require('express');
-const morgan = require('morgan');
-const multer = require('multer');
 const helmet = require('helmet');
 const xss = require('xss-clean');
-const YAML = require('yamljs');
-const cors = require('cors');
+const rateLimit = require('express-rate-limit');
+const multer = require('multer');
+const swaggerUi = require('swagger-ui-express');
+const morgan = require('morgan');
+const cookieParser = require('cookie-parser');
 const path = require('path');
+const mongoSanitize = require('express-mongo-sanitize');
 const hpp = require('hpp');
+const compression = require('compression');
+const cors = require('cors');
+const YAML = require('yamljs');
+const { StatusCodes } = require('http-status-codes');
 
 const swaggerDocument = YAML.load('./swagger.yaml');
 
 // requiring routes
-const globalErrorHandler = require('./controllers/errorController');
 const BadRequestError = require('./errors/badRequest');
-const NotFoundError = require('./errors/notFound');
 const commentRoute = require('./routes/comments');
-const storyRoute = require('./routes/stories');
 const userRoute = require('./routes/users');
+const bookmarkRoute = require('./routes/bookmarks');
+const NotFoundError = require('./errors/notFound');
+const storyRoute = require('./routes/stories');
+const historyRoute = require('./routes/history');
+const globalErrorHandler = require('./controllers/errorController');
 
 // start express app
 const app = express();
@@ -56,7 +58,7 @@ app.use('/api', limiter);
 
 // body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' }));
-app.use(cookieParser());
+app.use(cookieParser(process.env.COOKIE_SECRET));
 
 // data sanitization against NoSQL query injection
 app.use(mongoSanitize());
@@ -121,9 +123,11 @@ app.get('/', (req, res, next) => {
 });
 
 // api routes
-app.use('/api/v1/comments', commentRoute);
-app.use('/api/v1/stories', storyRoute);
 app.use('/api/v1/users', userRoute);
+app.use('/api/v1/stories', storyRoute);
+app.use('/api/v1/comments', commentRoute);
+app.use('/api/v1/histories', historyRoute);
+app.use('/api/v1/bookmarks', bookmarkRoute);
 
 app.all('*', (req, res, next) => {
   next(new NotFoundError(`Can't find ${req.originalUrl} on this server`));
