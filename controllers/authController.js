@@ -11,28 +11,8 @@ const catchAsync = require('../utils/catchAsync');
 const NotFoundError = require('../errors/notFound');
 const ForbiddenError = require('../errors/forbidden');
 const BadRequestError = require('../errors/badRequest');
+const createSendToken = require('../middleware/createSendToken');
 const UnauthenticatedError = require('../errors/unauthenticated');
-
-const createSendToken = (user, statusCode, req, res) => {
-  const token = user.generateAuthToken();
-
-  res.cookie('jwt', token, {
-    expires: new Date(
-      Date.now() + process.env.JWT_COOKIES_EXPIRES_IN * 24 * 60 * 60 * 1000
-    ),
-    httpOnly: true,
-    secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
-  });
-
-  // remove password from output
-  user.password = undefined;
-
-  res.status(statusCode).json({
-    status: 'success',
-    token,
-    user,
-  });
-};
 
 exports.signup = catchAsync(async (req, res, next) => {
   const userData = _.pick(req.body, [
@@ -84,7 +64,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   }
 
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-  const currentUser = await User.findById(decoded.id).select('-password');
+  const currentUser = await User.findById(decoded.id);
 
   if (!currentUser) {
     return next(
