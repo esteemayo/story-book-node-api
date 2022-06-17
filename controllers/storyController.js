@@ -96,8 +96,8 @@ exports.getUserStories = catchAsync(async (req, res, next) => {
 });
 
 exports.createStory = catchAsync(async (req, res, next) => {
-  if (!req.body.author) req.body.author = req.user.username;
   if (!req.body.user) req.body.user = req.user.id;
+  if (!req.body.author) req.body.author = req.user.username;
 
   const story = await Story.create({ ...req.body });
 
