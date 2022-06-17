@@ -21,6 +21,16 @@ const storySchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    tags: {
+      type: Array,
+      isAsync: true,
+      validate: {
+        validator: function (val) {
+          return val && val.length > 0;
+        },
+        message: 'A story should have at least one tag',
+      },
+    },
     user: {
       type: mongoose.Types.ObjectId,
       ref: 'User',
@@ -29,6 +39,10 @@ const storySchema = new mongoose.Schema(
     author: {
       type: String,
       required: [true, 'A story must have an author'],
+    },
+    likes: {
+      type: [String],
+      default: [],
     },
     createdAt: {
       type: Date,
