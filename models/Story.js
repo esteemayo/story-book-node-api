@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
 const slugify = require('slugify');
+const mongoose = require('mongoose');
 
 const storySchema = new mongoose.Schema(
   {
