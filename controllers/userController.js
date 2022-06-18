@@ -5,28 +5,41 @@ const User = require('../models/User');
 const Story = require('../models/Story');
 const factory = require('./handlerFactory');
 const catchAsync = require('../utils/catchAsync');
+const APIFeatures = require('../utils/apiFeatures');
 const BadRequestError = require('../errors/badRequest');
 const createSendToken = require('../middleware/createSendToken');
 
 exports.getUserDashBoard = catchAsync(async (req, res, next) => {
-  const { id: userID } = req.user;
+  const { id: userId } = req.user;
 
-  const stories = await Story.find({ user: userID });
+  const features = new APIFeatures(Story.find({ user: userId }), req.query)
+    .filter()
+    .sort()
+    .limitFields()
+    .paginate();
+
+  const stories = await features.query;
 
   res.status(StatusCodes.OK).send(stories);
 });
 
 exports.getCurrentUserStories = catchAsync(async (req, res, next) => {
-  const { id: userID } = req.user;
+  const { id: userId } = req.user;
 
-  const stories = await Story.find({ user: userID });
+  const features = new APIFeatures(Story.find({ user: userId }), req.query)
+    .filter()
+    .sort()
+    .limitFields()
+    .paginate();
+
+  const stories = await features.query;
 
   res.status(StatusCodes.OK).send(stories);
 });
 
 exports.updateMe = catchAsync(async (req, res, next) => {
   const {
-    user: { id: userID },
+    user: { id: userId },
     body: { password, passwordConfirm },
   } = req;
 
@@ -42,7 +55,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 
   const filterBody = _.pick(req.body, ['name', 'email', 'photo', 'username']);
 
-  const user = await User.findByIdAndUpdate(userID, filterBody, {
+  const user = await User.findByIdAndUpdate(userId, filterBody, {
     new: true,
     runValidators: true,
   });
@@ -51,9 +64,9 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteMe = catchAsync(async (req, res, next) => {
-  const { id: userID } = req.user;
+  const { id: userId } = req.user;
 
-  const user = await User.findByIdAndUpdate(userID, { active: false });
+  const user = await User.findByIdAndUpdate(userId, { active: false });
   await Story.deleteMany({ author: user.username });
 
   res.status(StatusCodes.NO_CONTENT).json({
