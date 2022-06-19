@@ -15,9 +15,9 @@ exports.getAllStories = catchAsync(async (req, res, next) => {
 
   // advanced filering
   let queryStr = JSON.stringify(queryObj);
-  queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/, (match) => `$${match}`);
+  queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
 
-  let query = Story.find(JSON.parse(queryStr));
+  let query = Story.find(JSON.parse(queryStr)).where('status').equals('public');
 
   // sorting
   if (req.query.sort) {
@@ -46,7 +46,7 @@ exports.getAllStories = catchAsync(async (req, res, next) => {
   const numberOfPages = Math.ceil(total / limit);
 
   let stories = await query;
-  stories = stories.filter((item) => item.status === 'public');
+  // stories = stories.filter((item) => item.status === 'public');
 
   res.status(StatusCodes.OK).json({
     totalStories: total,
@@ -128,6 +128,38 @@ exports.getUserStories = catchAsync(async (req, res, next) => {
   const { userId } = req.params;
 
   const stories = await Story.find({ user: userId, status: 'public' });
+
+  res.status(StatusCodes.OK).send(stories);
+});
+
+exports.getStoriesByTag = catchAsync(async (req, res, next) => {
+  const { tag } = req.params;
+  const tagQuery = tag || { $exists: true };
+
+  const tagPromise = Story.getTagsList();
+  const storyPromise = Story.find(tagQuery);
+
+  const [tags, stories] = await Promise.all([tagPromise, storyPromise]);
+
+  res.status(StatusCodes.OK).json({
+    tags,
+    stories,
+  });
+});
+
+exports.getRelatedStories = catchAsync(async (req, res, next) => {
+  const tags = req.body;
+
+  const features = new APIFeatures(
+    Story.find({ tags: { $in: tags } }),
+    req.query
+  )
+    .filter()
+    .sort()
+    .limitFields()
+    .paginate();
+
+  const stories = await features.query;
 
   res.status(StatusCodes.OK).send(stories);
 });
