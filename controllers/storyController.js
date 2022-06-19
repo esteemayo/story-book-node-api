@@ -45,8 +45,7 @@ exports.getAllStories = catchAsync(async (req, res, next) => {
 
   const numberOfPages = Math.ceil(total / limit);
 
-  let stories = await query;
-  // stories = stories.filter((item) => item.status === 'public');
+  const stories = await query;
 
   res.status(StatusCodes.OK).json({
     totalStories: total,
