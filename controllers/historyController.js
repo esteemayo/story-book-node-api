@@ -9,7 +9,7 @@ const ForbiddenError = require('../errors/forbidden');
 
 exports.getAllHistories = catchAsync(async (req, res, next) => {
   const features = new APIFeatures(
-    Bookmark.find({ user: req.user.id }),
+    History.find({ user: req.user.id }),
     req.query
   )
     .filter()
@@ -26,7 +26,7 @@ exports.getAllHistories = catchAsync(async (req, res, next) => {
 exports.getHistoriesOnStory = catchAsync(async (req, res, next) => {
   const { storyId } = req.params;
 
-  const histories = await Bookmark.find({ story: storyId });
+  const histories = await History.find({ story: storyId });
 
   res.status(StatusCodes.OK).send(histories);
 });
