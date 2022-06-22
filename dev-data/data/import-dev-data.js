@@ -4,9 +4,11 @@ const fs = require('fs');
 require('colors');
 
 // models
-const Comment = require('../../models/Comment');
+const Bookmark = require('../../models/Bookmark');
 const Story = require('../../models/Story');
+const Comment = require('../../models/Comment');
 const User = require('../../models/User');
+const History = require('../../models/History');
 
 dotenv.config({ path: './config.env' });
 
@@ -67,6 +69,8 @@ const deleteData = async () => {
     await Comment.deleteMany();
     await Story.deleteMany();
     await User.deleteMany();
+    await Bookmark.deleteMany();
+    await History.deleteMany();
     console.log(
       'Data successfully deleted! To load sample data, run\n\n\t npm run sample\n\n'
         .green.bold
