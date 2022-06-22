@@ -8,6 +8,14 @@ const router = express.Router();
 
 router.use('/:storyId/comments', commentRouter);
 
+router.get('/search', storyController.searchStories);
+
+router.get('/search/query', storyController.getStoriesBySearch);
+
+router.post('/related-stories', storyController.getRelatedStories);
+
+router.patch('/like/:id', authController.protect, storyController.likeStory);
+
 router
   .route('/')
   .get(storyController.getAllStories)
@@ -17,11 +25,7 @@ router
   .route('/:id')
   .get(authController.isLoggedIn, storyController.getStoryById)
   .patch(authController.protect, storyController.updateStory)
-  .delete(
-    authController.protect,
-    authController.restrictTo('user', 'admin'),
-    storyController.deleteStory
-  );
+  .delete(authController.protect, storyController.deleteStory);
 
 router.get(
   '/details/:slug',
