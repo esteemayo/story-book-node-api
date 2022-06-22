@@ -169,6 +169,7 @@ exports.searchStories = catchAsync(async (req, res, next) => {
       $text: {
         $search: req.query.q,
       },
+      status: 'public',
     },
     {
       score: {
