@@ -30,6 +30,8 @@ const globalErrorHandler = require('./controllers/errorController');
 const app = express();
 
 // global middleware
+app.set('trust proxy', 1);
+
 // implement CORS
 app.use(cors());
 
