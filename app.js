@@ -109,7 +109,7 @@ const upload = multer({
 });
 
 app.post('/api/v1/uploads', upload.single('file'), (req, res, next) => {
-  res.status(200).json({
+  res.status(StatusCodes.OK).json({
     status: 'success',
     message: 'File has been uploaded!',
   });
