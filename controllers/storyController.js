@@ -150,7 +150,7 @@ exports.getRelatedStories = catchAsync(async (req, res, next) => {
   const tags = req.body;
 
   const features = new APIFeatures(
-    Story.find({ tags: { $in: tags } }),
+    Story.find({ tags: { $in: tags }, status: 'public' }),
     req.query
   )
     .filter()
@@ -159,6 +159,38 @@ exports.getRelatedStories = catchAsync(async (req, res, next) => {
     .paginate();
 
   const stories = await features.query;
+
+  res.status(StatusCodes.OK).send(stories);
+});
+
+exports.searchStories = catchAsync(async (req, res, next) => {
+  const stories = await Story.find(
+    {
+      $text: {
+        $search: req.query.q,
+      },
+    },
+    {
+      score: {
+        $meta: 'textScore',
+      },
+    }
+  )
+    .sort({
+      score: {
+        $meta: 'textScore',
+      },
+    })
+    .limit(10);
+
+  res.status(StatusCodes.OK).send(stories);
+});
+
+exports.getStoriesBySearch = catchAsync(async (req, res, next) => {
+  const { searchQuery } = req.query;
+
+  const title = new RegExp(searchQuery, 'i');
+  const stories = await Story.find({ title });
 
   res.status(StatusCodes.OK).send(stories);
 });
