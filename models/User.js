@@ -25,7 +25,10 @@ const userSchema = new mongoose.Schema(
       unique: true,
       required: [true, 'Please tell us your username'],
     },
-    photo: String,
+    photo: {
+      type: String,
+      default: '',
+    },
     role: {
       type: String,
       enum: ['user', 'admin'],
