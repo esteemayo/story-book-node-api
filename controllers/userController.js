@@ -46,8 +46,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   if (password || passwordConfirm) {
     return next(
       new BadRequestError(
-        `This route is not for password updates. Please use update ${
-          req.protocol
+        `This route is not for password updates. Please use update ${req.protocol
         }://${req.get('host')}/api/v1/users/update-my-password`
       )
     );
