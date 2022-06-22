@@ -21,7 +21,6 @@ const bookmarkSchema = new mongoose.Schema(
 bookmarkSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'user',
-    select: 'name username photo',
   }).populate({
     path: 'story',
     select: 'title body status author',
