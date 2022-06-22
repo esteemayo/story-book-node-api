@@ -23,16 +23,16 @@ exports.getAll = (Model) =>
 
 exports.getOne = (Model, popOptions) =>
   catchAsync(async (req, res, next) => {
-    const { id: docID } = req.params;
+    const { id: docId } = req.params;
 
-    let query = Model.findById(docID);
+    let query = Model.findById(docId);
     if (popOptions) query = query.populate(popOptions);
 
     const doc = await query;
 
     if (!doc) {
       return next(
-        new NotFoundError(`No document found with that ID: ${docID}`)
+        new NotFoundError(`No document found with that ID: ${docId}`)
       );
     }
 
@@ -66,16 +66,16 @@ exports.createOne = (Model) =>
 
 exports.updateOne = (Model) =>
   catchAsync(async (req, res, next) => {
-    const { id: docID } = req.params;
+    const { id: docId } = req.params;
 
-    const doc = await Model.findByIdAndUpdate(docID, req.body, {
+    const doc = await Model.findByIdAndUpdate(docId, req.body, {
       new: true,
       runValidators: true,
     });
 
     if (!doc) {
       return next(
-        new NotFoundError(`No document found with that ID: ${docID}`)
+        new NotFoundError(`No document found with that ID: ${docId}`)
       );
     }
 
@@ -84,13 +84,13 @@ exports.updateOne = (Model) =>
 
 exports.deleteOne = (Model) =>
   catchAsync(async (req, res, next) => {
-    const { id: docID } = req.params;
+    const { id: docId } = req.params;
 
-    const doc = await Model.findByIdAndDelete(docID);
+    const doc = await Model.findByIdAndDelete(docId);
 
     if (!doc) {
       return next(
-        new NotFoundError(`No document found with that ID: ${docID}`)
+        new NotFoundError(`No document found with that ID: ${docId}`)
       );
     }
 
