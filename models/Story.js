@@ -55,6 +55,11 @@ const storySchema = new mongoose.Schema(
   }
 );
 
+storySchema.index({
+  title: 'text',
+  body: 'text',
+});
+
 storySchema.index({ title: 1, author: 1 });
 storySchema.index({ slug: -1 });
 
@@ -85,6 +90,23 @@ storySchema.pre(/^find/, function (next) {
 
   next();
 });
+
+storySchema.statics.getTagsList = function () {
+  return this.aggregate([
+    {
+      $unwind: '$tags',
+    },
+    {
+      $group: {
+        _id: '$tags',
+        count: { $sum: 1 },
+      },
+    },
+    {
+      $sort: { count: -1 },
+    },
+  ]);
+};
 
 const Story = mongoose.model('Story', storySchema);
 
