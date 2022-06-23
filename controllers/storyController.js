@@ -136,7 +136,7 @@ exports.getStoriesByTag = catchAsync(async (req, res, next) => {
   const tagQuery = tag || { $exists: true };
 
   const tagPromise = Story.getTagsList();
-  const storyPromise = Story.find(tagQuery);
+  const storyPromise = Story.find({ tags: tagQuery });
 
   const [tags, stories] = await Promise.all([tagPromise, storyPromise]);
 
