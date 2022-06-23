@@ -12,7 +12,7 @@ router.get('/search', storyController.searchStories);
 
 router.get('/search/query', storyController.getStoriesBySearch);
 
-router.get('/tag/:tag', storyController.getStoriesByTag);
+router.get('/tags/tag/:tag', storyController.getStoriesByTag);
 
 router.post('/related-stories', storyController.getRelatedStories);
 
