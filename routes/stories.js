@@ -12,6 +12,8 @@ router.get('/search', storyController.searchStories);
 
 router.get('/search/query', storyController.getStoriesBySearch);
 
+router.get('/tag/:tag', storyController.getStoriesByTag);
+
 router.post('/related-stories', storyController.getRelatedStories);
 
 router.patch('/like/:id', authController.protect, storyController.likeStory);
