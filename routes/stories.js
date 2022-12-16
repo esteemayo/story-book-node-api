@@ -2,7 +2,6 @@ const express = require('express');
 
 const commentRouter = require('./comments');
 const authMiddleware = require('../middleware/authMiddleware');
-const authController = require('../controllers/authController');
 const storyController = require('../controllers/storyController');
 
 const router = express.Router();
@@ -26,13 +25,13 @@ router
 
 router
   .route('/:id')
-  .get(authController.isLoggedIn, storyController.getStoryById)
+  .get(authMiddleware.isLoggedIn, storyController.getStoryById)
   .patch(authMiddleware.protect, storyController.updateStory)
   .delete(authMiddleware.protect, storyController.deleteStory);
 
 router.get(
   '/details/:slug',
-  authController.isLoggedIn,
+  authMiddleware.isLoggedIn,
   storyController.getStoryBySlug
 );
 
