@@ -16,7 +16,7 @@ exports.getAllBookmarks = catchAsync(async (req, res, next) => {
 
   const bookmarks = await features.query;
 
-  res.status(StatusCodes.OK).send(bookmarks);
+  res.status(StatusCodes.OK).json(bookmarks);
 });
 
 exports.getUserBookmarks = catchAsync(async (req, res, next) => {
@@ -31,7 +31,7 @@ exports.getUserBookmarks = catchAsync(async (req, res, next) => {
 
   const bookmarks = await features.query;
 
-  res.status(StatusCodes.OK).send(bookmarks);
+  res.status(StatusCodes.OK).json(bookmarks);
 });
 
 exports.getBookmark = catchAsync(async (req, res, next) => {
@@ -49,7 +49,7 @@ exports.getBookmark = catchAsync(async (req, res, next) => {
     String(bookmark.user._id) === String(req.user.id) ||
     req.user.role === 'admin'
   ) {
-    return res.status(StatusCodes.OK).send(bookmark);
+    return res.status(StatusCodes.OK).json(bookmark);
   }
 
   return next(new ForbiddenError('You do not have access to this bookmark'));
@@ -74,7 +74,7 @@ exports.getOneBookmark = catchAsync(async (req, res, next) => {
     );
   }
 
-  res.status(StatusCodes.OK).send(bookmark);
+  res.status(StatusCodes.OK).json(bookmark);
 });
 
 exports.createBookmark = catchAsync(async (req, res, next) => {
@@ -98,7 +98,7 @@ exports.createBookmark = catchAsync(async (req, res, next) => {
 
   bookmark = await Bookmark.create({ ...req.body });
 
-  res.status(StatusCodes.CREATED).send(bookmark);
+  res.status(StatusCodes.CREATED).json(bookmark);
 });
 
 exports.updateBookmark = catchAsync(async (req, res, next) => {
@@ -125,7 +125,7 @@ exports.updateBookmark = catchAsync(async (req, res, next) => {
       }
     );
 
-    return res.status(StatusCodes.OK).send(bookmark);
+    return res.status(StatusCodes.OK).json(bookmark);
   }
 
   return next(new ForbiddenError('You can only update your bookmark'));
@@ -148,7 +148,7 @@ exports.deleteBookmark = catchAsync(async (req, res, next) => {
   ) {
     bookmark = await Bookmark.findByIdAndDelete(bookmarkId);
 
-    return res.status(StatusCodes.NO_CONTENT).send(bookmark);
+    return res.status(StatusCodes.NO_CONTENT).json(bookmark);
   }
 
   return next(new ForbiddenError('You can only delete your bookmark'));
