@@ -69,22 +69,22 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   )}/api/v1/users/reset-password/${resetToken}`;
 
   const message = `
-        Hi ${user.name},
-        There was a request to change your password!
-        If you did not make this request then please ignore this email.
-        Otherwise, please click this link to change your password: ${resetURL}
+    Hi ${user.name},
+    There was a request to change your password!
+    If you did not make this request then please ignore this email.
+    Otherwise, please click this link to change your password: ${resetURL}
   `;
 
   const html = `
-        <div style='background: #f7f7f7; color: #333; padding: 50px; text-align: left;'>
-            <h3>Hi ${user.name},</h3>
-            <p>There was a request to change your password!</p>
-            <p>If you did not make this request then please ignore this email.</p>
-            <p>Otherwise, please click this link to change your password: 
-                <a href='${resetURL}'>Reset my password →</a>
-            </p>
-        </div>
-    `;
+    <div style='background: #f7f7f7; color: #333; padding: 50px; text-align: left;'>
+        <h3>Hi ${user.name},</h3>
+        <p>There was a request to change your password!</p>
+        <p>If you did not make this request then please ignore this email.</p>
+        <p>Otherwise, please click this link to change your password: 
+          <a href='${resetURL}'>Reset my password →</a>
+        </p>
+    </div>
+  `;
 
   try {
     await sendMail({
