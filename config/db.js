@@ -7,10 +7,7 @@ const { DATABASE, DATABASE_LOCAL, DATABASE_PASSWORD } = process.env;
 const dbLocal = DATABASE_LOCAL;
 
 // atlas mongo uri
-const mongoURI = DATABASE.replace(
-  '<PASSWORD>',
-  DATABASE_PASSWORD
-);
+const mongoURI = DATABASE.replace('<PASSWORD>', DATABASE_PASSWORD);
 
 const db = devEnv ? dbLocal : mongoURI;
 
