@@ -42,7 +42,9 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new UnauthenticatedError('Incorrect email or password'));
   }
 
-  createSendToken(user, StatusCodes.OK, req, res);
+  if (user) {
+    createSendToken(user, StatusCodes.OK, req, res);
+  }
 });
 
 exports.forgotPassword = catchAsync(async (req, res, next) => {
