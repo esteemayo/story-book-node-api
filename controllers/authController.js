@@ -25,7 +25,9 @@ exports.signup = catchAsync(async (req, res, next) => {
 
   const user = await User.create({ ...userData });
 
-  createSendToken(user, StatusCodes.CREATED, req, res);
+  if (user) {
+    createSendToken(user, StatusCodes.CREATED, req, res);
+  }
 });
 
 exports.login = catchAsync(async (req, res, next) => {
