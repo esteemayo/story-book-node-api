@@ -1,5 +1,6 @@
 const express = require('express');
 
+const authMiddleware = require('../middleware/authMiddleware');
 const authController = require('../controllers/authController');
 const userController = require('../controllers/userController');
 
@@ -13,7 +14,7 @@ router.post('/forgot-password', authController.forgotPassword);
 
 router.post('/reset-password/:token', authController.resetPassword);
 
-router.use(authController.protect);
+router.use(authMiddleware.protect);
 
 router.get('/dashboard', userController.getUserDashBoard);
 
@@ -29,13 +30,13 @@ router.delete('/delete-me', userController.deleteMe);
 
 router
   .route('/')
-  .get(userController.getAllUsers)
+  .get(authMiddleware.restrictTo('admin'), userController.getAllUsers)
   .post(userController.createUser);
 
 router
   .route('/:id')
-  .get(userController.getUser)
-  .patch(userController.updateUser)
-  .delete(userController.deleteUser);
+  .get(authMiddleware.verifyUser, userController.getUser)
+  .patch(authMiddleware.restrictTo('admin'), userController.updateUser)
+  .delete(authMiddleware.restrictTo('admin'), userController.deleteUser);
 
 module.exports = router;
