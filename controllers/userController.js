@@ -20,7 +20,7 @@ exports.getUserDashBoard = catchAsync(async (req, res, next) => {
 
   const stories = await features.query;
 
-  res.status(StatusCodes.OK).send(stories);
+  res.status(StatusCodes.OK).json(stories);
 });
 
 exports.getCurrentUserStories = catchAsync(async (req, res, next) => {
@@ -34,7 +34,7 @@ exports.getCurrentUserStories = catchAsync(async (req, res, next) => {
 
   const stories = await features.query;
 
-  res.status(StatusCodes.OK).send(stories);
+  res.status(StatusCodes.OK).json(stories);
 });
 
 exports.updateMe = catchAsync(async (req, res, next) => {
@@ -90,6 +90,5 @@ exports.createUser = (req, res, next) => {
 
 exports.getAllUsers = factory.getAll(User);
 exports.getUser = factory.getOne(User);
-// do NOT update password with this
 exports.updateUser = factory.updateOne(User);
 exports.deleteUser = factory.deleteOne(User);
