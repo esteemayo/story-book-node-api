@@ -1,4 +1,3 @@
-const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 require('colors');
 
@@ -9,31 +8,16 @@ process.on('uncaughtException', (err) => {
 });
 
 dotenv.config({ path: './config.env' });
+
 const app = require('./app');
-
-// db local
-const db = process.env.DATABASE_LOCAL;
-
-// atlas mongo uri
-const mongoUri = process.env.DATABASE.replace(
-  '<PASSWORD>',
-  process.env.DATABASE_PASSWORD
-);
-
-const devEnv = process.env.NODE_ENV !== 'production';
-
-// mongoDB connection
-mongoose
-  .connect(devEnv ? db : mongoUri)
-  .then(() =>
-    console.log(`Connected to MongoDB → ${devEnv ? db : mongoUri}`.gray.bold)
-  );
+const connectDB = require('./config/db');
 
 app.set('port', process.env.PORT || 9090);
 
-const server = app.listen(app.get('port'), () =>
+const server = app.listen(app.get('port'), async () => {
+  await connectDB();
   console.log(`Server running at port → ${server.address().port}`.blue.bold)
-);
+});
 
 process.on('unhandledRejection', (err) => {
   console.log('UNHANDLED REJECTION! 🔥 Shutting down...'.red.bold);
