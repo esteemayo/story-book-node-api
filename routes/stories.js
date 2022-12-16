@@ -1,8 +1,9 @@
 const express = require('express');
 
-const storyController = require('../controllers/storyController');
-const authController = require('../controllers/authController');
 const commentRouter = require('./comments');
+const authMiddleware = require('../middleware/authMiddleware');
+const authController = require('../controllers/authController');
+const storyController = require('../controllers/storyController');
 
 const router = express.Router();
 
@@ -16,18 +17,18 @@ router.get('/tag/:tag', storyController.getStoriesByTag);
 
 router.post('/related-stories', storyController.getRelatedStories);
 
-router.patch('/like/:id', authController.protect, storyController.likeStory);
+router.patch('/like/:id', authMiddleware.protect, storyController.likeStory);
 
 router
   .route('/')
   .get(storyController.getAllStories)
-  .post(authController.protect, storyController.createStory);
+  .post(authMiddleware.protect, storyController.createStory);
 
 router
   .route('/:id')
   .get(authController.isLoggedIn, storyController.getStoryById)
-  .patch(authController.protect, storyController.updateStory)
-  .delete(authController.protect, storyController.deleteStory);
+  .patch(authMiddleware.protect, storyController.updateStory)
+  .delete(authMiddleware.protect, storyController.deleteStory);
 
 router.get(
   '/details/:slug',
@@ -37,7 +38,7 @@ router.get(
 
 router.get(
   '/user/:userId',
-  authController.protect,
+  authMiddleware.protect,
   storyController.getUserStories
 );
 
