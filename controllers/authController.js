@@ -7,7 +7,6 @@ const sendMail = require('../utils/mail');
 const AppError = require('../errors/appError');
 const catchAsync = require('../utils/catchAsync');
 const NotFoundError = require('../errors/notFound');
-const ForbiddenError = require('../errors/forbidden');
 const BadRequestError = require('../errors/badRequest');
 const createSendToken = require('../middleware/createSendToken');
 const UnauthenticatedError = require('../errors/unauthenticated');
