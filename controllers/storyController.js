@@ -65,13 +65,13 @@ exports.getStoryById = catchAsync(async (req, res, next) => {
   }
 
   if (story.status === 'public') {
-    res.status(StatusCodes.OK).send(story);
+    res.status(StatusCodes.OK).json(story);
   } else if (story.status === 'private' || story.status === 'unpublished') {
-    res.status(StatusCodes.OK).send(story);
+    res.status(StatusCodes.OK).json(story);
   } else {
     if (req.user) {
       if (req.user.username === story.author) {
-        res.status(StatusCodes.OK).send(story);
+        res.status(StatusCodes.OK).json(story);
       } else {
         return next(
           new ForbiddenError(
@@ -99,13 +99,13 @@ exports.getStoryBySlug = catchAsync(async (req, res, next) => {
   }
 
   if (story.status === 'public') {
-    res.status(StatusCodes.OK).send(story);
+    res.status(StatusCodes.OK).json(story);
   } else if (story.status === 'private' || story.status === 'unpublished') {
-    res.status(StatusCodes.OK).send(story);
+    res.status(StatusCodes.OK).json(story);
   } else {
     if (req.user) {
       if (req.user.username === story.author) {
-        res.status(StatusCodes.OK).send(story);
+        res.status(StatusCodes.OK).json(story);
       } else {
         return next(
           new ForbiddenError(
@@ -128,7 +128,7 @@ exports.getUserStories = catchAsync(async (req, res, next) => {
 
   const stories = await Story.find({ user: userId, status: 'public' });
 
-  res.status(StatusCodes.OK).send(stories);
+  res.status(StatusCodes.OK).json(stories);
 });
 
 exports.getStoriesByTag = catchAsync(async (req, res, next) => {
@@ -160,7 +160,7 @@ exports.getRelatedStories = catchAsync(async (req, res, next) => {
 
   const stories = await features.query;
 
-  res.status(StatusCodes.OK).send(stories);
+  res.status(StatusCodes.OK).json(stories);
 });
 
 exports.searchStories = catchAsync(async (req, res, next) => {
@@ -184,7 +184,7 @@ exports.searchStories = catchAsync(async (req, res, next) => {
     })
     .limit(10);
 
-  res.status(StatusCodes.OK).send(stories);
+  res.status(StatusCodes.OK).json(stories);
 });
 
 exports.getStoriesBySearch = catchAsync(async (req, res, next) => {
@@ -193,7 +193,7 @@ exports.getStoriesBySearch = catchAsync(async (req, res, next) => {
   const title = new RegExp(searchQuery, 'i');
   const stories = await Story.find({ title });
 
-  res.status(StatusCodes.OK).send(stories);
+  res.status(StatusCodes.OK).json(stories);
 });
 
 exports.createStory = catchAsync(async (req, res, next) => {
@@ -202,7 +202,7 @@ exports.createStory = catchAsync(async (req, res, next) => {
 
   const story = await Story.create({ ...req.body });
 
-  res.status(StatusCodes.CREATED).send(story);
+  res.status(StatusCodes.CREATED).json(story);
 });
 
 exports.updateStory = catchAsync(async (req, res, next) => {
@@ -220,7 +220,7 @@ exports.updateStory = catchAsync(async (req, res, next) => {
       runValidators: true,
     });
 
-    res.status(StatusCodes.OK).send(updatedStory);
+    res.status(StatusCodes.OK).json(updatedStory);
   }
 
   return next(new ForbiddenError('You can only update your story'));
@@ -252,7 +252,7 @@ exports.likeStory = catchAsync(async (req, res, next) => {
     }
   );
 
-  res.status(StatusCodes.OK).send(story);
+  res.status(StatusCodes.OK).json(story);
 });
 
 exports.deleteStory = catchAsync(async (req, res, next) => {
