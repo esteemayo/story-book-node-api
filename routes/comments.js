@@ -1,11 +1,11 @@
 const express = require('express');
 
+const authMiddleware = require('../middleware/authMiddleware');
 const commentController = require('../controllers/commentController');
-const authController = require('../controllers/authController');
 
 const router = express.Router({ mergeParams: true });
 
-router.use(authController.protect);
+router.use(authMiddleware.protect);
 
 router
   .route('/')
@@ -17,7 +17,7 @@ router
   .get(commentController.getComment)
   .patch(commentController.updateComment)
   .delete(
-    authController.restrictTo('user', 'admin'),
+    authMiddleware.restrictTo('user', 'admin'),
     commentController.deleteComment
   );
 
