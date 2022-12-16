@@ -46,32 +46,6 @@ exports.login = catchAsync(async (req, res, next) => {
   createSendToken(user, StatusCodes.OK, req, res);
 });
 
-exports.isLoggedIn = async (req, res, next) => {
-  if (req.cookies.jwt) {
-    try {
-      const decoded = await promisify(jwt.verify)(
-        token,
-        process.env.JWT_SECRET
-      );
-
-      const currentUser = await User.findById(decoded.id).select('-password');
-      if (!currentUser) {
-        return next();
-      }
-
-      if (currentUser.changedPasswordAfter(decoded.iat)) {
-        return next();
-      }
-
-      res.locals.user = currentUser;
-      return next();
-    } catch (err) {
-      return next();
-    }
-  }
-  next();
-};
-
 exports.restrictTo = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
