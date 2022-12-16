@@ -18,7 +18,7 @@ exports.getAll = (Model) =>
     const docs = await features.query;
     // const docs = await features.query.explain();
 
-    res.status(StatusCodes.OK).send(docs);
+    res.status(StatusCodes.OK).json(docs);
   });
 
 exports.getOne = (Model, popOptions) =>
@@ -36,7 +36,7 @@ exports.getOne = (Model, popOptions) =>
       );
     }
 
-    res.status(StatusCodes.OK).send(doc);
+    res.status(StatusCodes.OK).json(doc);
   });
 
 exports.getSlug = (Model, popOptions) =>
@@ -54,14 +54,14 @@ exports.getSlug = (Model, popOptions) =>
       );
     }
 
-    res.status(StatusCodes.OK).send(doc);
+    res.status(StatusCodes.OK).json(doc);
   });
 
 exports.createOne = (Model) =>
   catchAsync(async (req, res, next) => {
     const doc = await Model.create({ ...req.body });
 
-    res.status(StatusCodes.CREATED).send(doc);
+    res.status(StatusCodes.CREATED).json(doc);
   });
 
 exports.updateOne = (Model) =>
@@ -79,7 +79,7 @@ exports.updateOne = (Model) =>
       );
     }
 
-    res.status(StatusCodes.OK).send(doc);
+    res.status(StatusCodes.OK).json(doc);
   });
 
 exports.deleteOne = (Model) =>
@@ -94,5 +94,5 @@ exports.deleteOne = (Model) =>
       );
     }
 
-    res.status(StatusCodes.NO_CONTENT).send(doc);
+    res.status(StatusCodes.NO_CONTENT).json(doc);
   });
