@@ -1,7 +1,5 @@
 const _ = require('lodash');
 const crypto = require('crypto');
-const jwt = require('jsonwebtoken');
-const { promisify } = require('util');
 const { StatusCodes } = require('http-status-codes');
 
 const User = require('../models/User');
