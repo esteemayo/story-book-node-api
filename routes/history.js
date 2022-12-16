@@ -1,20 +1,20 @@
 const express = require('express');
 
-const authController = require('../controllers/authController');
+const authMiddleware = require('../middleware/authMiddleware');
 const historyController = require('../controllers/historyController');
 
 const router = express.Router();
 
 router.get('/story/:storyId', historyController.getHistoriesOnStory);
 
-router.use(authController.protect);
+router.use(authMiddleware.protect);
 
 router
   .route('/')
   .get(historyController.getAllHistories)
   .post(historyController.createHistory);
 
-router.use(authController.restrictTo('admin'));
+router.use(authMiddleware.restrictTo('admin'));
 
 router
   .route('/:id')
