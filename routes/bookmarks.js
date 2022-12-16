@@ -1,11 +1,11 @@
 const express = require('express');
 
-const authController = require('../controllers/authController');
+const authMiddleware = require('../middleware/authMiddleware');
 const bookmarkController = require('../controllers/bookmarkController');
 
 const router = express.Router();
 
-router.use(authController.protect);
+router.use(authMiddleware.protect);
 
 router.get('/find/user', bookmarkController.getUserBookmarks);
 
@@ -13,7 +13,7 @@ router.get('/story/:storyId', bookmarkController.getOneBookmark);
 
 router
   .route('/')
-  .get(authController.restrictTo('admin'), bookmarkController.getAllBookmarks)
+  .get(authMiddleware.restrictTo('admin'), bookmarkController.getAllBookmarks)
   .post(bookmarkController.createBookmark);
 
 router
