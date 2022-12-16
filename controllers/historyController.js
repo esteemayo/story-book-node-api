@@ -20,7 +20,7 @@ exports.getAllHistories = catchAsync(async (req, res, next) => {
   let histories = await features.query;
   histories = _.uniq(histories.map((item) => item.story));
 
-  res.status(StatusCodes.OK).send(histories);
+  res.status(StatusCodes.OK).json(histories);
 });
 
 exports.getHistoriesOnStory = catchAsync(async (req, res, next) => {
@@ -28,7 +28,7 @@ exports.getHistoriesOnStory = catchAsync(async (req, res, next) => {
 
   const histories = await History.find({ story: storyId });
 
-  res.status(StatusCodes.OK).send(histories);
+  res.status(StatusCodes.OK).json(histories);
 });
 
 exports.getHistory = catchAsync(async (req, res, next) => {
@@ -42,7 +42,7 @@ exports.getHistory = catchAsync(async (req, res, next) => {
     );
   }
 
-  res.status(StatusCodes.OK).send(history);
+  res.status(StatusCodes.OK).json(history);
 });
 
 exports.createHistory = catchAsync(async (req, res, next) => {
@@ -50,7 +50,7 @@ exports.createHistory = catchAsync(async (req, res, next) => {
 
   const history = await History.create({ ...req.body });
 
-  res.status(StatusCodes.CREATED).send(history);
+  res.status(StatusCodes.CREATED).json(history);
 });
 
 exports.updateHistory = catchAsync(async (req, res, next) => {
@@ -77,7 +77,7 @@ exports.updateHistory = catchAsync(async (req, res, next) => {
       }
     );
 
-    return res.status(StatusCodes.OK).send(history);
+    return res.status(StatusCodes.OK).json(history);
   }
 
   return next(new ForbiddenError('You can only update your history'));
@@ -100,7 +100,7 @@ exports.deleteHistory = catchAsync(async (req, res, next) => {
   ) {
     history = await History.findByIdAndDelete(historyId);
 
-    return res.status(StatusCodes.NO_CONTENT).send(history);
+    return res.status(StatusCodes.NO_CONTENT).json(history);
   }
 
   return next(new ForbiddenError('You can only delete your history'));
