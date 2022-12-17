@@ -6,7 +6,7 @@ const handleCastErrorDB = (customError, err) => {
 };
 
 const handleDuplicateFieldsDB = (customError, err) => {
-  const value = err.message.match(/(["'])(\\?.)/)[0];
+  const value = err.message.match(/(["'])(?:(?=(\\?))\2.)*?\1/)[0];
   customError.message = `Duplicate field value: ${value}. Please use another value.`;
   customError.statusCode = StatusCodes.BAD_REQUEST;
 };
