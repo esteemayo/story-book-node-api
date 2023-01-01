@@ -13,8 +13,8 @@ import compression from 'compression';
 import cors from 'cors';
 import YAML from 'yamljs';
 import { StatusCodes } from 'http-status-codes';
-
-const swaggerDocument = YAML.load('./swagger.yaml');
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 // requiring routes
 import BadRequestError from './errors/badRequest.js';
@@ -25,6 +25,10 @@ import NotFoundError from './errors/notFound.js';
 import storyRoute from './routes/stories.js';
 import historyRoute from './routes/history.js';
 import globalErrorHandler from './controllers/errorController.js';
+
+const swaggerDocument = YAML.load('./swagger.yaml');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // start express app
 const app = express();
