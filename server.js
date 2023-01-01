@@ -1,5 +1,5 @@
-const dotenv = require('dotenv');
-require('colors');
+import dotenv from 'dotenv';
+import 'colors';
 
 process.on('uncaughtException', (err) => {
   console.log('UNCAUGHT EXCEPTION! 🔥 Shutting down...'.red.bold);
@@ -9,8 +9,8 @@ process.on('uncaughtException', (err) => {
 
 dotenv.config({ path: './config.env' });
 
-const app = require('./app');
-const connectDB = require('./config/db');
+import app from './app.js';
+import connectDB from './config/db.js';
 
 app.set('port', process.env.PORT || 9090);
 
