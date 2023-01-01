@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const bookmarkSchema = new mongoose.Schema(
   {
@@ -31,4 +31,4 @@ bookmarkSchema.pre(/^find/, function (next) {
 
 const Bookmark = mongoose.models.Bookmark || mongoose.model('Bookmark', bookmarkSchema);
 
-module.exports = Bookmark;
+export default Bookmark;
