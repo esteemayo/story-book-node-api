@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const devEnv = process.env.NODE_ENV !== 'production';
 const { DATABASE, DATABASE_LOCAL, DATABASE_PASSWORD } = process.env;
@@ -20,4 +20,4 @@ const connectDB = async () => {
   }
 };
 
-module.exports = connectDB;
+export default connectDB;
