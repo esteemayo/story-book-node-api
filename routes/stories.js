@@ -1,8 +1,8 @@
-const express = require('express');
+import express from 'express';
 
-const commentRouter = require('./comments');
-const authMiddleware = require('../middleware/authMiddleware');
-const storyController = require('../controllers/storyController');
+import commentRouter from './comments.js';
+import * as authMiddleware from '../middleware/authMiddleware.js';
+import * as storyController from '../controllers/storyController.js';
 
 const router = express.Router();
 
@@ -41,4 +41,4 @@ router.get(
   storyController.getUserStories
 );
 
-module.exports = router;
+export default router;
