@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 
 import User from '../models/User.js';
 import Story from '../models/Story.js';
-import factory from './handlerFactory.js';
+import * as factory from './handlerFactory.js';
 import catchAsync from '../utils/catchAsync.js';
 import APIFeatures from '../utils/apiFeatures.js';
 import BadRequestError from '../errors/badRequest.js';
