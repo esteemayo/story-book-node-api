@@ -1,12 +1,12 @@
-const jwt = require('jsonwebtoken');
-const { promisify } = require('util');
+import jwt from 'jsonwebtoken';
+import { promisify } from 'util';
 
-const User = require('../models/User');
-const catchAsync = require('../utils/catchAsync');
-const ForbiddenError = require('../errors/forbidden');
-const UnauthenticatedError = require('../errors/unauthenticated');
+import User from '../models/User.js';
+import catchAsync from '../utils/catchAsync.js';
+import ForbiddenError from '../errors/forbidden.js';
+import UnauthenticatedError from '../errors/unauthenticated.js';
 
-exports.protect = catchAsync(async (req, res, next) => {
+export const protect = catchAsync(async (req, res, next) => {
   let token;
   const authHeader = req.headers.authorization;
 
@@ -48,7 +48,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   next();
 });
 
-exports.isLoggedIn = async (req, res, next) => {
+export const isLoggedIn = async (req, res, next) => {
   if (req.cookies.jwt) {
     try {
       const decoded = await promisify(jwt.verify)(
@@ -74,7 +74,7 @@ exports.isLoggedIn = async (req, res, next) => {
   next();
 };
 
-exports.restrictTo =
+export const restrictTo =
   (...roles) =>
     (req, res, next) => {
       if (!roles.includes(req.user.role)) {
@@ -86,7 +86,7 @@ exports.restrictTo =
     };
 
 
-exports.verifyUser = (req, res, next) => {
+export const verifyUser = (req, res, next) => {
   if (req.user.id === req.params.id) {
     return next();
   }
