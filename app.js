@@ -1,30 +1,30 @@
-const express = require('express');
-const helmet = require('helmet');
-const xss = require('xss-clean');
-const rateLimit = require('express-rate-limit');
-const multer = require('multer');
-const swaggerUi = require('swagger-ui-express');
-const morgan = require('morgan');
-const cookieParser = require('cookie-parser');
-const path = require('path');
-const mongoSanitize = require('express-mongo-sanitize');
-const hpp = require('hpp');
-const compression = require('compression');
-const cors = require('cors');
-const YAML = require('yamljs');
-const { StatusCodes } = require('http-status-codes');
+import express from 'express';
+import helmet from 'helmet';
+import xss from 'xss-clean';
+import rateLimit from 'express-rate-limit';
+import multer from 'multer';
+import swaggerUi from 'swagger-ui-express';
+import morgan from 'morgan';
+import cookieParser from 'cookie-parser';
+import path from 'path';
+import mongoSanitize from 'express-mongo-sanitize';
+import hpp from 'hpp';
+import compression from 'compression';
+import cors from 'cors';
+import YAML from 'yamljs';
+import { StatusCodes } from 'http-status-codes';
 
 const swaggerDocument = YAML.load('./swagger.yaml');
 
 // requiring routes
-const BadRequestError = require('./errors/badRequest');
-const commentRoute = require('./routes/comments');
-const userRoute = require('./routes/users');
-const bookmarkRoute = require('./routes/bookmarks');
-const NotFoundError = require('./errors/notFound');
-const storyRoute = require('./routes/stories');
-const historyRoute = require('./routes/history');
-const globalErrorHandler = require('./controllers/errorController');
+import BadRequestError from './errors/badRequest.js';
+import commentRoute from './routes/comments.js';
+import userRoute from './routes/users.js';
+import bookmarkRoute from './routes/bookmarks.js';
+import NotFoundError from './errors/notFound.js';
+import storyRoute from './routes/stories.js';
+import historyRoute from './routes/history.js';
+import globalErrorHandler from './controllers/errorController.js';
 
 // start express app
 const app = express();
@@ -137,4 +137,4 @@ app.all('*', (req, res, next) => {
 
 app.use(globalErrorHandler);
 
-module.exports = app;
+export default app;
