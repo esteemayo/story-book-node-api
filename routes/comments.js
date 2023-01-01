@@ -1,7 +1,7 @@
-const express = require('express');
+import express from 'express';
 
-const authMiddleware = require('../middleware/authMiddleware');
-const commentController = require('../controllers/commentController');
+import * as authMiddleware from '../middleware/authMiddleware.js';
+import * as commentController from '../controllers/commentController.js';
 
 const router = express.Router({ mergeParams: true });
 
@@ -21,4 +21,4 @@ router
     commentController.deleteComment
   );
 
-module.exports = router;
+export default router;
