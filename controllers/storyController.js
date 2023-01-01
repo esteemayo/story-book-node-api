@@ -1,13 +1,13 @@
-const { StatusCodes } = require('http-status-codes');
+import { StatusCodes } from 'http-status-codes';
 
-const Story = require('../models/Story');
-const catchAsync = require('../utils/catchAsync');
-const APIFeatures = require('../utils/apiFeatures');
-const NotFoundError = require('../errors/notFound');
-const ForbiddenError = require('../errors/forbidden');
-const UnauthenticatedError = require('../errors/unauthenticated');
+import Story from '../models/Story.js';
+import catchAsync from '../utils/catchAsync.js';
+import APIFeatures from '../utils/apiFeatures.js';
+import NotFoundError from '../errors/notFound.js';
+import ForbiddenError from '../errors/forbidden.js';
+import UnauthenticatedError from '../errors/unauthenticated.js';
 
-exports.getAllStories = catchAsync(async (req, res, next) => {
+export const getAllStories = catchAsync(async (req, res, next) => {
   // filtering
   const queryObj = { ...req.query };
   const excludedFields = ['page', 'sort', 'limit', 'fields'];
@@ -55,7 +55,7 @@ exports.getAllStories = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getStoryById = catchAsync(async (req, res, next) => {
+export const getStoryById = catchAsync(async (req, res, next) => {
   const { id: storyId } = req.params;
 
   const story = await Story.findById(storyId).populate('comments');
@@ -89,7 +89,7 @@ exports.getStoryById = catchAsync(async (req, res, next) => {
   }
 });
 
-exports.getStoryBySlug = catchAsync(async (req, res, next) => {
+export const getStoryBySlug = catchAsync(async (req, res, next) => {
   const { slug } = req.params;
 
   const story = await Story.findOne({ slug: slug }).populate('comments');
@@ -123,7 +123,7 @@ exports.getStoryBySlug = catchAsync(async (req, res, next) => {
   }
 });
 
-exports.getUserStories = catchAsync(async (req, res, next) => {
+export const getUserStories = catchAsync(async (req, res, next) => {
   const { userId } = req.params;
 
   const stories = await Story.find({ user: userId, status: 'public' });
@@ -131,7 +131,7 @@ exports.getUserStories = catchAsync(async (req, res, next) => {
   res.status(StatusCodes.OK).json(stories);
 });
 
-exports.getStoriesByTag = catchAsync(async (req, res, next) => {
+export const getStoriesByTag = catchAsync(async (req, res, next) => {
   const { tag } = req.params;
   const tagQuery = tag || { $exists: true };
 
@@ -146,7 +146,7 @@ exports.getStoriesByTag = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getRelatedStories = catchAsync(async (req, res, next) => {
+export const getRelatedStories = catchAsync(async (req, res, next) => {
   const tags = req.body;
 
   const features = new APIFeatures(
@@ -163,7 +163,7 @@ exports.getRelatedStories = catchAsync(async (req, res, next) => {
   res.status(StatusCodes.OK).json(stories);
 });
 
-exports.searchStories = catchAsync(async (req, res, next) => {
+export const searchStories = catchAsync(async (req, res, next) => {
   const stories = await Story.find(
     {
       $text: {
@@ -187,7 +187,7 @@ exports.searchStories = catchAsync(async (req, res, next) => {
   res.status(StatusCodes.OK).json(stories);
 });
 
-exports.getStoriesBySearch = catchAsync(async (req, res, next) => {
+export const getStoriesBySearch = catchAsync(async (req, res, next) => {
   const { searchQuery } = req.query;
 
   const title = new RegExp(searchQuery, 'i');
@@ -196,7 +196,7 @@ exports.getStoriesBySearch = catchAsync(async (req, res, next) => {
   res.status(StatusCodes.OK).json(stories);
 });
 
-exports.createStory = catchAsync(async (req, res, next) => {
+export const createStory = catchAsync(async (req, res, next) => {
   if (!req.body.user) req.body.user = req.user.id;
   if (!req.body.author) req.body.author = req.user.username;
 
@@ -205,7 +205,7 @@ exports.createStory = catchAsync(async (req, res, next) => {
   res.status(StatusCodes.CREATED).json(story);
 });
 
-exports.updateStory = catchAsync(async (req, res, next) => {
+export const updateStory = catchAsync(async (req, res, next) => {
   const { id: storyId } = req.params;
 
   const story = await Story.findById(storyId);
@@ -226,7 +226,7 @@ exports.updateStory = catchAsync(async (req, res, next) => {
   return next(new ForbiddenError('You can only update your story'));
 });
 
-exports.likeStory = catchAsync(async (req, res, next) => {
+export const likeStory = catchAsync(async (req, res, next) => {
   const { id: storyId } = req.params;
 
   let story = await Story.findById(storyId);
@@ -255,7 +255,7 @@ exports.likeStory = catchAsync(async (req, res, next) => {
   res.status(StatusCodes.OK).json(story);
 });
 
-exports.deleteStory = catchAsync(async (req, res, next) => {
+export const deleteStory = catchAsync(async (req, res, next) => {
   const { id: storyId } = req.params;
 
   const story = await Story.findById(storyId);
