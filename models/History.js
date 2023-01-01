@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const historySchema = new mongoose.Schema(
   {
@@ -31,4 +31,4 @@ historySchema.pre(/^find/, function (next) {
 
 const History = mongoose.models.History || mongoose.model('History', historySchema);
 
-module.exports = History;
+export default History;
