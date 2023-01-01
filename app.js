@@ -14,6 +14,7 @@ import cors from 'cors';
 import YAML from 'yamljs';
 import { StatusCodes } from 'http-status-codes';
 import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
 
 // requiring routes
 import BadRequestError from './errors/badRequest.js';
@@ -28,6 +29,8 @@ import globalErrorHandler from './controllers/errorController.js';
 const swaggerDocument = YAML.load('./swagger.yaml');
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+dotenv.config({ path: './config.env' });
 
 // start express app
 const app = express();
