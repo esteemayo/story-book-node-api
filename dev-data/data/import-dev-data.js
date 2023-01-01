@@ -1,37 +1,24 @@
-const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-const fs = require('fs');
-require('colors');
+import fs from 'fs';
+import path from 'path';
+import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
+import 'colors';
 
 // models
-const Bookmark = require('../../models/Bookmark');
-const Story = require('../../models/Story');
-const Comment = require('../../models/Comment');
-const User = require('../../models/User');
-const History = require('../../models/History');
+import Bookmark from '../../models/Bookmark.js';
+import Story from '../../models/Story.js';
+import Comment from '../../models/Comment.js';
+import User from '../../models/User.js';
+import History from '../../models/History.js';
+import connectDB from '../../config/db/js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv.config({ path: './config.env' });
 
-// db local
-const db = process.env.DATABASE_LOCAL;
-
-// atlas mongo uri
-const mongoUri = process.env.DATABASE.replace(
-  '<PASSWORD>',
-  process.env.DATABASE_PASSWORD
-);
-
-const devEnv = process.env.NODE_ENV !== 'production';
-
 // mongoDB connection
-mongoose
-  .connect(`${devEnv ? db : mongoUri}`)
-  .then(() =>
-    console.log(`Connected to MongoDB → ${devEnv ? db : mongoUri}`.gray.bold)
-  )
-  .catch((err) =>
-    console.log(`Could not connect to MongoDB → ${err}`.red.bold)
-  );
+connectDB();
 
 // read JSON file
 const comments = JSON.parse(
