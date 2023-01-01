@@ -1,7 +1,7 @@
-const express = require('express');
+import express from 'express';
 
-const authMiddleware = require('../middleware/authMiddleware');
-const bookmarkController = require('../controllers/bookmarkController');
+import * as authMiddleware from '../middleware/authMiddleware.js';
+import * as bookmarkController from '../controllers/bookmarkController.js';
 
 const router = express.Router();
 
@@ -22,4 +22,4 @@ router
   .patch(bookmarkController.updateBookmark)
   .delete(bookmarkController.deleteBookmark);
 
-module.exports = router;
+export default router;
