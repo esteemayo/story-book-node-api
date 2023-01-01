@@ -1,5 +1,5 @@
-const slugify = require('slugify');
-const mongoose = require('mongoose');
+import slugify from 'slugify';
+import mongoose from 'mongoose';
 
 const storySchema = new mongoose.Schema(
   {
@@ -110,4 +110,4 @@ storySchema.statics.getTagsList = function () {
 
 const Story = mongoose.models.Story || mongoose.model('Story', storySchema);
 
-module.exports = Story;
+export default Story;
