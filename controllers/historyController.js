@@ -1,13 +1,13 @@
-const _ = require('lodash');
-const { StatusCodes } = require('http-status-codes');
+import _ from 'lodash';
+import { StatusCodes } from 'http-status-codes';
 
-const History = require('../models/History');
-const catchAsync = require('../utils/catchAsync');
-const APIFeatures = require('../utils/apiFeatures');
-const NotFoundError = require('../errors/notFound');
-const ForbiddenError = require('../errors/forbidden');
+import History from '../models/History.js';
+import catchAsync from '../utils/catchAsync.js';
+import APIFeatures from '../utils/apiFeatures.js';
+import NotFoundError from '../errors/notFound.js';
+import ForbiddenError from '../errors/forbidden.js';
 
-exports.getAllHistories = catchAsync(async (req, res, next) => {
+export const getAllHistories = catchAsync(async (req, res, next) => {
   const features = new APIFeatures(
     History.find({ user: req.user.id }),
     req.query
@@ -23,7 +23,7 @@ exports.getAllHistories = catchAsync(async (req, res, next) => {
   res.status(StatusCodes.OK).json(histories);
 });
 
-exports.getHistoriesOnStory = catchAsync(async (req, res, next) => {
+export const getHistoriesOnStory = catchAsync(async (req, res, next) => {
   const { storyId } = req.params;
 
   const histories = await History.find({ story: storyId });
@@ -31,7 +31,7 @@ exports.getHistoriesOnStory = catchAsync(async (req, res, next) => {
   res.status(StatusCodes.OK).json(histories);
 });
 
-exports.getHistory = catchAsync(async (req, res, next) => {
+export const getHistory = catchAsync(async (req, res, next) => {
   const { id: historyId } = req.params;
 
   const history = await History.findById(historyId);
@@ -45,7 +45,7 @@ exports.getHistory = catchAsync(async (req, res, next) => {
   res.status(StatusCodes.OK).json(history);
 });
 
-exports.createHistory = catchAsync(async (req, res, next) => {
+export const createHistory = catchAsync(async (req, res, next) => {
   if (!req.body.user) req.body.user = req.user.id;
 
   const history = await History.create({ ...req.body });
@@ -53,7 +53,7 @@ exports.createHistory = catchAsync(async (req, res, next) => {
   res.status(StatusCodes.CREATED).json(history);
 });
 
-exports.updateHistory = catchAsync(async (req, res, next) => {
+export const updateHistory = catchAsync(async (req, res, next) => {
   const { id: historyId } = req.params;
 
   let history = await History.findById(historyId);
@@ -83,7 +83,7 @@ exports.updateHistory = catchAsync(async (req, res, next) => {
   return next(new ForbiddenError('You can only update your history'));
 });
 
-exports.deleteHistory = catchAsync(async (req, res, next) => {
+export const deleteHistory = catchAsync(async (req, res, next) => {
   const { id: historyId } = req.params;
 
   let history = await History.findById(historyId);
