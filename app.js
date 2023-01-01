@@ -13,7 +13,6 @@ import compression from 'compression';
 import cors from 'cors';
 import YAML from 'yamljs';
 import { StatusCodes } from 'http-status-codes';
-import path from 'path';
 import { fileURLToPath } from 'url';
 
 // requiring routes
