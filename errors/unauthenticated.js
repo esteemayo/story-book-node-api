@@ -1,5 +1,5 @@
-const { StatusCodes } = require('http-status-codes');
-const AppError = require('./appError');
+import { StatusCodes } from 'http-status-codes';
+import AppError from './appError.js';
 
 class UnauthenticatedError extends AppError {
   constructor(message) {
@@ -10,4 +10,4 @@ class UnauthenticatedError extends AppError {
   }
 }
 
-module.exports = UnauthenticatedError;
+export default UnauthenticatedError;
