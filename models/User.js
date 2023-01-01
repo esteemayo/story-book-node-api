@@ -1,8 +1,8 @@
-const mongoose = require('mongoose');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
-const crypto = require('crypto');
-const md5 = require('md5');
+import mongoose from 'mongoose';
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
+import md5 from 'md5';
 
 const userSchema = new mongoose.Schema(
   {
@@ -154,4 +154,4 @@ userSchema.methods.createPasswordResetToken = function () {
 
 const User = mongoose.models.User || mongoose.model('User', userSchema);
 
-module.exports = User;
+export default User;
