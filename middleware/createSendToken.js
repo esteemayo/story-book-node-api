@@ -21,4 +21,4 @@ const createSendToken = (user, statusCode, req, res) => {
   });
 };
 
-module.exports = createSendToken;
+export default createSendToken;
