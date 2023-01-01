@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const commentSchema = new mongoose.Schema(
   {
@@ -38,4 +38,4 @@ commentSchema.pre(/^find/, function (next) {
 
 const Comment = mongoose.models.Comment || mongoose.model('Comment', commentSchema);
 
-module.exports = Comment;
+export default Comment;
