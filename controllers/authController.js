@@ -1,17 +1,17 @@
-const _ = require('lodash');
-const crypto = require('crypto');
-const { StatusCodes } = require('http-status-codes');
+import _ from 'lodash';
+import crypto from 'crypto';
+import { StatusCodes } from 'http-status-codes';
 
-const User = require('../models/User');
-const sendMail = require('../utils/mail');
-const AppError = require('../errors/appError');
-const catchAsync = require('../utils/catchAsync');
-const NotFoundError = require('../errors/notFound');
-const BadRequestError = require('../errors/badRequest');
-const createSendToken = require('../middleware/createSendToken');
-const UnauthenticatedError = require('../errors/unauthenticated');
+import User from '../models/User.js';
+import sendMail from '../utils/mail.js';
+import AppError from '../errors/appError.js';
+import catchAsync from '../utils/catchAsync.js';
+import NotFoundError from '../errors/notFound.js';
+import BadRequestError from '../errors/badRequest.js';
+import createSendToken from '../middleware/createSendToken.js';
+import UnauthenticatedError from '../errors/unauthenticated.js';
 
-exports.signup = catchAsync(async (req, res, next) => {
+export const signup = catchAsync(async (req, res, next) => {
   const userData = _.pick(req.body, [
     'name',
     'role',
@@ -30,7 +30,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   }
 });
 
-exports.login = catchAsync(async (req, res, next) => {
+export const login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -47,7 +47,7 @@ exports.login = catchAsync(async (req, res, next) => {
   }
 });
 
-exports.forgotPassword = catchAsync(async (req, res, next) => {
+export const forgotPassword = catchAsync(async (req, res, next) => {
   const { email } = req.body;
 
   if (email === '') {
@@ -110,7 +110,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   }
 });
 
-exports.resetPassword = catchAsync(async (req, res, next) => {
+export const resetPassword = catchAsync(async (req, res, next) => {
   const hashedToken = crypto
     .createHash('sha256')
     .update(req.params.token)
@@ -133,7 +133,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   createSendToken(user, StatusCodes.OK, req, res);
 });
 
-exports.updatePassword = catchAsync(async (req, res, next) => {
+export const updatePassword = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user.id).select('+password');
 
   if (!(await user.correctPassword(req.body.passwordCurrent))) {
