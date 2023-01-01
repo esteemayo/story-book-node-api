@@ -1,10 +1,10 @@
-const { StatusCodes } = require('http-status-codes');
+import { StatusCodes } from 'http-status-codes';
 
-const catchAsync = require('../utils/catchAsync');
-const APIFeatures = require('../utils/apiFeatures');
-const NotFoundError = require('../errors/notFound');
+import catchAsync from '../utils/catchAsync.js';
+import APIFeatures from '../utils/apiFeatures.js';
+import NotFoundError from '../errors/notFound.js';
 
-exports.getAll = (Model) =>
+export const getAll = (Model) =>
   catchAsync(async (req, res, next) => {
     let filter = {};
     if (req.params.storyId) filter = { story: req.params.storyId };
@@ -21,7 +21,7 @@ exports.getAll = (Model) =>
     res.status(StatusCodes.OK).json(docs);
   });
 
-exports.getOne = (Model, popOptions) =>
+export const getOne = (Model, popOptions) =>
   catchAsync(async (req, res, next) => {
     const { id: docId } = req.params;
 
@@ -39,7 +39,7 @@ exports.getOne = (Model, popOptions) =>
     res.status(StatusCodes.OK).json(doc);
   });
 
-exports.getSlug = (Model, popOptions) =>
+export const getSlug = (Model, popOptions) =>
   catchAsync(async (req, res, next) => {
     const { slug } = req.params;
 
@@ -57,14 +57,14 @@ exports.getSlug = (Model, popOptions) =>
     res.status(StatusCodes.OK).json(doc);
   });
 
-exports.createOne = (Model) =>
+export const createOne = (Model) =>
   catchAsync(async (req, res, next) => {
     const doc = await Model.create({ ...req.body });
 
     res.status(StatusCodes.CREATED).json(doc);
   });
 
-exports.updateOne = (Model) =>
+export const updateOne = (Model) =>
   catchAsync(async (req, res, next) => {
     const { id: docId } = req.params;
 
@@ -82,7 +82,7 @@ exports.updateOne = (Model) =>
     res.status(StatusCodes.OK).json(doc);
   });
 
-exports.deleteOne = (Model) =>
+export const deleteOne = (Model) =>
   catchAsync(async (req, res, next) => {
     const { id: docId } = req.params;
 
