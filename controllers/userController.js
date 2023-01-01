@@ -1,15 +1,15 @@
-const _ = require('lodash');
-const { StatusCodes } = require('http-status-codes');
+import _ from 'lodash';
+import { StatusCodes } from 'http-status-codes';
 
-const User = require('../models/User');
-const Story = require('../models/Story');
-const factory = require('./handlerFactory');
-const catchAsync = require('../utils/catchAsync');
-const APIFeatures = require('../utils/apiFeatures');
-const BadRequestError = require('../errors/badRequest');
-const createSendToken = require('../middleware/createSendToken');
+import User from '../models/User.js';
+import Story from '../models/Story.js';
+import factory from './handlerFactory.js';
+import catchAsync from '../utils/catchAsync.js';
+import APIFeatures from '../utils/apiFeatures.js';
+import BadRequestError from '../errors/badRequest.js';
+import createSendToken from '../middleware/createSendToken.js';
 
-exports.getUserDashBoard = catchAsync(async (req, res, next) => {
+export const getUserDashBoard = catchAsync(async (req, res, next) => {
   const { id: userId } = req.user;
 
   const features = new APIFeatures(Story.find({ user: userId }), req.query)
@@ -23,7 +23,7 @@ exports.getUserDashBoard = catchAsync(async (req, res, next) => {
   res.status(StatusCodes.OK).json(stories);
 });
 
-exports.getCurrentUserStories = catchAsync(async (req, res, next) => {
+export const getCurrentUserStories = catchAsync(async (req, res, next) => {
   const { id: userId } = req.user;
 
   const features = new APIFeatures(Story.find({ user: userId }), req.query)
@@ -37,7 +37,7 @@ exports.getCurrentUserStories = catchAsync(async (req, res, next) => {
   res.status(StatusCodes.OK).json(stories);
 });
 
-exports.updateMe = catchAsync(async (req, res, next) => {
+export const updateMe = catchAsync(async (req, res, next) => {
   const {
     user: { id: userId },
     body: { password, passwordConfirm },
@@ -62,7 +62,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   createSendToken(user, StatusCodes.OK, req, res);
 });
 
-exports.deleteMe = catchAsync(async (req, res, next) => {
+export const deleteMe = catchAsync(async (req, res, next) => {
   const { id: userId } = req.user;
 
   const user = await User.findByIdAndUpdate(userId, { active: false });
@@ -74,12 +74,12 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getMe = (req, res, next) => {
+export const getMe = (req, res, next) => {
   req.params.id = req.user.id;
   next();
 };
 
-exports.createUser = (req, res, next) => {
+export const createUser = (req, res, next) => {
   res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
     status: 'fail',
     message: `This route is not defined! Please use ${req.protocol}://${req.get(
@@ -88,7 +88,7 @@ exports.createUser = (req, res, next) => {
   });
 };
 
-exports.getAllUsers = factory.getAll(User);
-exports.getUser = factory.getOne(User);
-exports.updateUser = factory.updateOne(User);
-exports.deleteUser = factory.deleteOne(User);
+export const getAllUsers = factory.getAll(User);
+export const getUser = factory.getOne(User);
+export const updateUser = factory.updateOne(User);
+export const deleteUser = factory.deleteOne(User);
