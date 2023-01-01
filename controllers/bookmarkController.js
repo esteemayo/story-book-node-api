@@ -1,13 +1,13 @@
-const { StatusCodes } = require('http-status-codes');
+import { StatusCodes } from 'http-status-codes';
 
-const Bookmark = require('../models/Bookmark');
-const catchAsync = require('../utils/catchAsync');
-const APIFeatures = require('../utils/apiFeatures');
-const NotFoundError = require('../errors/notFound');
-const ForbiddenError = require('../errors/forbidden');
-const BadRequestError = require('../errors/badRequest');
+import Bookmark from '../models/Bookmark.js';
+import catchAsync from '../utils/catchAsync.js';
+import APIFeatures from '../utils/apiFeatures.js';
+import NotFoundError from '../errors/notFound.js';
+import ForbiddenError from '../errors/forbidden.js';
+import BadRequestError from '../errors/badRequest.js';
 
-exports.getAllBookmarks = catchAsync(async (req, res, next) => {
+export const getAllBookmarks = catchAsync(async (req, res, next) => {
   const features = new APIFeatures(Bookmark.find(), req.query)
     .filter()
     .sort()
@@ -19,7 +19,7 @@ exports.getAllBookmarks = catchAsync(async (req, res, next) => {
   res.status(StatusCodes.OK).json(bookmarks);
 });
 
-exports.getUserBookmarks = catchAsync(async (req, res, next) => {
+export const getUserBookmarks = catchAsync(async (req, res, next) => {
   const features = new APIFeatures(
     Bookmark.find({ user: req.user.id }),
     req.query
@@ -34,7 +34,7 @@ exports.getUserBookmarks = catchAsync(async (req, res, next) => {
   res.status(StatusCodes.OK).json(bookmarks);
 });
 
-exports.getBookmark = catchAsync(async (req, res, next) => {
+export const getBookmark = catchAsync(async (req, res, next) => {
   const { id: bookmarkId } = req.params;
 
   const bookmark = await Bookmark.findById(bookmarkId);
@@ -55,7 +55,7 @@ exports.getBookmark = catchAsync(async (req, res, next) => {
   return next(new ForbiddenError('You do not have access to this bookmark'));
 });
 
-exports.getOneBookmark = catchAsync(async (req, res, next) => {
+export const getOneBookmark = catchAsync(async (req, res, next) => {
   const {
     user: { id: userId },
     params: { storyId },
@@ -77,7 +77,7 @@ exports.getOneBookmark = catchAsync(async (req, res, next) => {
   res.status(StatusCodes.OK).json(bookmark);
 });
 
-exports.createBookmark = catchAsync(async (req, res, next) => {
+export const createBookmark = catchAsync(async (req, res, next) => {
   const {
     user: { id: userId },
     body: { story },
@@ -101,7 +101,7 @@ exports.createBookmark = catchAsync(async (req, res, next) => {
   res.status(StatusCodes.CREATED).json(bookmark);
 });
 
-exports.updateBookmark = catchAsync(async (req, res, next) => {
+export const updateBookmark = catchAsync(async (req, res, next) => {
   const { id: bookmarkId } = req.params;
 
   let bookmark = await Bookmark.findById(bookmarkId);
@@ -131,7 +131,7 @@ exports.updateBookmark = catchAsync(async (req, res, next) => {
   return next(new ForbiddenError('You can only update your bookmark'));
 });
 
-exports.deleteBookmark = catchAsync(async (req, res, next) => {
+export const deleteBookmark = catchAsync(async (req, res, next) => {
   const { id: bookmarkId } = req.params;
 
   let bookmark = await Bookmark.findById(bookmarkId);
