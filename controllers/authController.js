@@ -1,14 +1,14 @@
 import _ from 'lodash';
-import crypto from 'crypto';
 import { StatusCodes } from 'http-status-codes';
+import crypto from 'crypto';
 
 import User from '../models/User.js';
-import sendMail from '../utils/mail.js';
 import AppError from '../errors/appError.js';
-import catchAsync from '../utils/catchAsync.js';
+import sendMail from '../utils/mail.js';
 import NotFoundError from '../errors/notFound.js';
-import BadRequestError from '../errors/badRequest.js';
+import catchAsync from '../utils/catchAsync.js';
 import createSendToken from '../middleware/createSendToken.js';
+import BadRequestError from '../errors/badRequest.js';
 import UnauthenticatedError from '../errors/unauthenticated.js';
 
 export const signup = catchAsync(async (req, res, next) => {
