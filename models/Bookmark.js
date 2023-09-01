@@ -29,6 +29,7 @@ bookmarkSchema.pre(/^find/, function (next) {
   next();
 });
 
-const Bookmark = mongoose.models.Bookmark || mongoose.model('Bookmark', bookmarkSchema);
+const Bookmark =
+  mongoose.models.Bookmark || mongoose.model('Bookmark', bookmarkSchema);
 
 export default Bookmark;
