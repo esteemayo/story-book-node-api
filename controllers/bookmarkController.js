@@ -1,10 +1,10 @@
 import { StatusCodes } from 'http-status-codes';
 
 import Bookmark from '../models/Bookmark.js';
-import catchAsync from '../utils/catchAsync.js';
 import APIFeatures from '../utils/apiFeatures.js';
-import NotFoundError from '../errors/notFound.js';
+import catchAsync from '../utils/catchAsync.js';
 import ForbiddenError from '../errors/forbidden.js';
+import NotFoundError from '../errors/notFound.js';
 import BadRequestError from '../errors/badRequest.js';
 
 export const getAllBookmarks = catchAsync(async (req, res, next) => {
