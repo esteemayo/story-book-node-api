@@ -10,7 +10,7 @@ import Story from '../../models/Story.js';
 import Comment from '../../models/Comment.js';
 import User from '../../models/User.js';
 import History from '../../models/History.js';
-import connectDB from '../../config/db/js';
+import connectDB from '../../config/db.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
