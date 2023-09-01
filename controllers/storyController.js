@@ -1,8 +1,8 @@
 import { StatusCodes } from 'http-status-codes';
 
-import catchAsync from '../utils/catchAsync.js';
 import Story from '../models/Story.js';
 import APIFeatures from '../utils/apiFeatures.js';
+import catchAsync from '../utils/catchAsync.js';
 import ForbiddenError from '../errors/forbidden.js';
 import NotFoundError from '../errors/notFound.js';
 import UnauthenticatedError from '../errors/unauthenticated.js';
