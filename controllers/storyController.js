@@ -1,10 +1,10 @@
 import { StatusCodes } from 'http-status-codes';
 
-import Story from '../models/Story.js';
 import catchAsync from '../utils/catchAsync.js';
+import Story from '../models/Story.js';
 import APIFeatures from '../utils/apiFeatures.js';
-import NotFoundError from '../errors/notFound.js';
 import ForbiddenError from '../errors/forbidden.js';
+import NotFoundError from '../errors/notFound.js';
 import UnauthenticatedError from '../errors/unauthenticated.js';
 
 export const getAllStories = catchAsync(async (req, res, next) => {
