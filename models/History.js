@@ -29,6 +29,7 @@ historySchema.pre(/^find/, function (next) {
   next();
 });
 
-const History = mongoose.models.History || mongoose.model('History', historySchema);
+const History =
+  mongoose.models.History || mongoose.model('History', historySchema);
 
 export default History;
