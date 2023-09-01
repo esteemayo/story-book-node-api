@@ -2,10 +2,10 @@ import _ from 'lodash';
 import { StatusCodes } from 'http-status-codes';
 
 import History from '../models/History.js';
-import catchAsync from '../utils/catchAsync.js';
 import APIFeatures from '../utils/apiFeatures.js';
-import NotFoundError from '../errors/notFound.js';
+import catchAsync from '../utils/catchAsync.js';
 import ForbiddenError from '../errors/forbidden.js';
+import NotFoundError from '../errors/notFound.js';
 
 export const getAllHistories = catchAsync(async (req, res, next) => {
   const features = new APIFeatures(
