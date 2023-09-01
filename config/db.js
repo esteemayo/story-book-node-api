@@ -23,4 +23,12 @@ const connectDB = async () => {
   }
 };
 
+mongoose.connection.on('connect', () => {
+  console.log('MongoDB conected');
+});
+
+mongoose.connection.on('disconnect', () => {
+  console.log('MongoDB disconnected');
+});
+
 export default connectDB;
