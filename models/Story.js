@@ -108,6 +108,7 @@ storySchema.statics.getTagsList = function () {
   ]);
 };
 
-const Story = mongoose.models.Story || mongoose.model('Story', storySchema);
+const Story =
+  mongoose.models.Story || mongoose.model('Story', storySchema);
 
 export default Story;
